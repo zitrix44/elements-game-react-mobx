@@ -15,10 +15,9 @@ import { StoreContext } from './Contexts.ts';
 // TODO: было бы полезно разобраться, почему не пашет // NOTE: такие TODO остаются TODO
 
 store.launchStore.setElementsCSV(mockups.elements.v1);
-// store.launchStore.start();
+store.launchStore.start();
 
 createRoot(document.getElementById('root')!).render(
-  // store.launchStore.active ? <Launcher /> : <App />
   <>
     <StoreContext.Provider value={store}>
       <App />

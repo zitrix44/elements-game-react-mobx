@@ -4,7 +4,11 @@ import Element from "../model/Element";
 
 const ElementItem = observer(({v}: {v:Element}) => {
     return <>
-        <li>#{v.id} «{v.title}»</li>
+        <li>
+            #{v.id}@{v.level} 
+            <span className="material-symbols-outlined">{v.mdIcon}</span>
+            {v.title}
+        </li>
     </>;
 });
 

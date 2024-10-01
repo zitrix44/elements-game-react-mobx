@@ -1,0 +1,1 @@
+export { BgIconed as default } from "./BgIconed";

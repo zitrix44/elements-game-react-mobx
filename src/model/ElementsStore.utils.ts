@@ -4,7 +4,7 @@ import { TElement, TElementBase, TElementRuntime, TElementVisual } from "./Eleme
 export const formatId = (id: string): string => (id || "").trim().toLowerCase(); // без ошибки за пустой id в утилях
 
 export type Tadd = Partial<TElement> & TElementBase;
-export type Tcsv = TElementBase & TElementVisual & Partial<TElementRuntime>;
+export type Tcsv = TElementBase & TElementVisual & Pick<TElementRuntime, "discovered" | "level">;
 export type TError = {
     i: number,
     er: string;
@@ -57,6 +57,12 @@ export const parseCSV = (csvRaw: string): Tcsv[] => {
             // do not repeat error .length===1 here
             return firstLine.filter(v => v.length);
         }
+        if (field === 'discovered') {
+            if (value.trim()==='+') return Date.now();
+            if (value.trim()==='-') return Date.now();
+            if (value.trim()==='') return 0;
+            return parseInt(value.trim(), 10) || 0;
+        }
         return value.trim();
     }
     const parseConfig = {
@@ -68,7 +74,7 @@ export const parseCSV = (csvRaw: string): Tcsv[] => {
     };
     const startAt = performance.now();
     const parsed = Papa.parse<Tcsv>(csvRaw, parseConfig);
-    const elements = parsed.data.filter((v: Tcsv) => !!v.id).filter((v: Tcsv) => !v.id.startsWith('#'));
+    const elements: Tcsv[] = parsed.data.filter((v: Tcsv) => !!v.id).filter((v: Tcsv) => !v.id.startsWith('#'));
     elements.forEach((element) => {
         // NOTE: неправильно, т.к. говорит об ошибках форматирования, но потребуются малополезные переделки текущего кода (не FIXME)
         if (!('parentIds' in element)) {
@@ -76,6 +82,13 @@ export const parseCSV = (csvRaw: string): Tcsv[] => {
             //@ts-ignore
             element.parentIds = [];
         }
+        if (!('discovered' in element)) {
+            // runtime error
+            //@ts-ignore
+            element.discovered = 0;
+        }
+        //@ts-ignore
+        element.level = -1;
     });
     const finishAt = performance.now();
     const withWarnings = parsed.errors.length;
@@ -92,7 +105,7 @@ export const parseCSV = (csvRaw: string): Tcsv[] => {
     // - НЕ факт, что это серьезная ошибка
     // - НЕ факт, что пустой parsed.errors означает корректный парсинг
     // - до логических ошибок МОЖЕМ не доходить
-    // - для логических ошибок УЖЕ выводится суммарный отчет; недостачу данных перекинем в логические
+    // - для логических ошибок УЖЕ выводится суммарный отчет; недостачу данных перекинем в ошибки логические
     if ('renamedHeaders' in parsed.meta) {
         const renamesCount = Object.keys(parsed.meta.renamedHeaders || {}).length;
         if (renamesCount > 0) {

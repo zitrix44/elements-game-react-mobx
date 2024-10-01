@@ -14,6 +14,10 @@ export class RootStore {
         this.elementsStore = new ElementsStore();
         this.launchStore = new LaunchStore(this);
     }
+
+    startWithParsed() {
+        this.elementsStore.startWithParsed(this.launchStore.elementsParsed);
+    }
 }
 
 export default new RootStore();

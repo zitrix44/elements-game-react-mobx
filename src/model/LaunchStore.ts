@@ -44,17 +44,11 @@ export default class LaunchStore {
             const er = _er as Error;
             this.elementsParseError = er;
             console.error(er);
-            this.#rootStore.utils.toastError(`${er.name}: ${er.message}`)
+            this.#rootStore.utils.toastError(`${er.name}: ${er.message}`);
         } finally {
             this.elementsParsingDurationMS = parsedAt - startAt;
             this.elementsLogicErrorsFinderMs = finishAt - parsedAt;
         }
-    }
-
-    toastInfo(msg: string) {
-        // https://fkhadra.github.io/react-toastify/introduction/
-        // toast.info(msg);
-        this.#rootStore.utils.toastInfo(msg);
     }
 
     toastError(msg: string) {
@@ -63,7 +57,7 @@ export default class LaunchStore {
 
     start() {
         if (!this.active) {
-            throw new Error(`${ER_PREFIX}Use .reset() for set active back`);
+            throw new Error(`${ER_PREFIX}For restart, use .reset(), .start()`);
         }
         if (this.elementsParseError) {
             throw new Error(`${ER_PREFIX}Can't start with .elementsParseError`);
@@ -71,6 +65,7 @@ export default class LaunchStore {
         if (this.elementsLogicErrors.length) {
             throw new Error(`${ER_PREFIX}Can't start with .elementsLogicErrors`);
         }
+        this.#rootStore.startWithParsed();
         this.active = false;
     }
 }
