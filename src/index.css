@@ -1,0 +1,11 @@
+@import './fonts.css';
+@import './icons.css';
+@import './z-index.css';
+html {
+    --copy-button-color: var(--bs-primary);
+    --disclaimer-click-text: "Click for show this spoiler";
+    --disclaimer-color: #ced4da33;
+    --disclaimer-color-stripe: #ced4da99;
+    --disclaimer-hover-color: #ced4daff;
+    --disclaimer-hover-color-stripe: #ced4da00;
+}

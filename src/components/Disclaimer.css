@@ -1,0 +1,86 @@
+
+.disclaimer {
+    position: relative;
+    background: var(--disclaimer-color);
+    color: var(--disclaimer-color);
+    cursor: pointer;
+    transition: 0.05s linear background-color, 0.05s linear color;
+    background: 
+        repeating-linear-gradient(
+            -75deg,
+            var(--disclaimer-color),
+            var(--disclaimer-color) 10px,
+            var(--disclaimer-color-stripe) 15px,
+            var(--disclaimer-color-stripe) 20px,
+            var(--disclaimer-color) 22px
+        )
+    ;
+    background-position: 0px 0px;
+}
+.disclaimer.not-opened.not-force-opened {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.disclaimer.not-opened.not-force-opened:hover {
+    animation: disclaimer-hover-bg 1.2s ease infinite;
+}
+@keyframes disclaimer-hover-bg {
+	0% {
+		background-position: 0px 0px;
+	}
+    90% {
+        background-position: 22px 0px;
+    }
+    100% {
+        background-position: 22px 0px;
+    }
+}
+.disclaimer.not-allow-inner-click.not-opened.not-force-opened * {
+    pointer-events: none;
+}
+.disclaimer.opened, .disclaimer.force-opened {
+    transition: 0.5s linear background-color, 0.5s linear color;
+}
+.disclaimer.opened, .disclaimer.force-opened {
+    background: unset;
+    color: unset;
+    cursor: unset;
+}
+.disclaimer::before {
+    content: var(--disclaimer-click-text);
+    white-space: nowrap;
+    position: absolute;
+    left: -8px;
+    top: -12px;
+    /* margin-top: -1.5em; */
+    padding: 1px 0.5em 2px;
+    color: var(--bs-gray-dark);
+    /* color: var(--bs-link-color); */
+    /* color: var(--bs-info); */
+    /* color: var(--bs-gray-600); */
+    font-weight: 400;
+    font-size: 0.75em;
+    background: var(--bs-gray-200);
+    pointer-events: none;
+    border: 1px solid var(--bs-gray-400);
+    border-radius: 4px;
+    transition: 0.2s ease-in opacity, 0.3s linear transform;
+    opacity: 0;
+    box-shadow: 0px 0px 5px 1px #ffffff66, 0px 6px 8px #000000aa, 0px 3px 3px #00000044;
+    z-index: var(--z-index-tooltip-on-hover);
+    transform: translateX(-2.5em);
+}
+.disclaimer:hover::before {
+    opacity: 1;
+    transform: translateX(0em);
+    transition: 0.3s ease-in opacity, 0.2s linear transform;
+}
+.disclaimer.opened:hover::before, .disclaimer.force-opened:hover::before {
+    opacity: 0;
+}
+.disclaimer.opened::before, .disclaimer.force-opened::before,
+.disclaimer.opened:hover::before, .disclaimer.force-opened:hover::before {
+    transition: 0.2s ease-in opacity, 0.3s linear transform;
+    transform: translateX(2em);
+}

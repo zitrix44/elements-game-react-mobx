@@ -1,0 +1,29 @@
+html {
+  font-size: 16px; /* 1rem */
+}
+
+html body {
+  /* --bs-body-font-family: "Noto Sans", "Segoe UI", sans-serif; */
+  /* --bs-body-font-family: "Noto Serif", "Segoe UI", sans-serif; */
+  --bs-body-font-family: "Segoe UI", sans-serif;
+  --bs-body-font-size: 1rem; /* 1rem at bootstrap */
+  --bs-body-line-height: 1.4; /* 1.5 at bootstrap */
+  --bs-body-font-weight: 400;
+  font-optical-sizing: auto;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+/*
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 100 to 900
+
+.noto-sans-<uniquifier> {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+*/

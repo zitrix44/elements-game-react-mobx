@@ -1,0 +1,5 @@
+/* NOTE: no any z-index outside this file */
+
+html {
+    --z-index-tooltip-on-hover: 1080; /* as $zindex-tooltip https://getbootstrap.com/docs/5.3/layout/z-index/ */
+}

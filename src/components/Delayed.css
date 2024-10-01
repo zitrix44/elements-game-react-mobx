@@ -1,0 +1,7 @@
+.delayed-hidden {
+    visibility: hidden;
+}
+.delayed-hidden-use-opacity .delayed-hidden {
+    visibility: unset;
+    opacity: 0;
+}

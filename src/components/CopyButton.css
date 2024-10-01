@@ -1,0 +1,14 @@
+.copy-button {
+    & {
+        opacity: 0.6;
+        transition: 0.05s linear opacity;
+        color: var(--copy-button-color);
+    }
+    &:hover, &:focus {
+        opacity: 1;
+    }
+}
+
+.copy-able:has(.copy-button:hover) .copy-hover {
+    border-bottom: 1px dotted var(--copy-button-color);
+}
