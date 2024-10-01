@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { ToastContainer } from 'react-toastify';
@@ -13,7 +13,7 @@ import './Launcher.css';
 import Delayed, { CLASSNAME_DELAYED_HIDDEN_USE_OPACITY } from './Delayed';
 import { envBroken, envNumber } from '../utils';
 
-const LauncherH1 = observer(({launchStore, onClickStart}: {launchStore: LaunchStore, onClickStart: () => void}) => {
+const LauncherH1 = observer(({onClickStart}: {launchStore: LaunchStore, onClickStart: () => void}) => {
     // NOTE: clickable <a />, #tl-dr-play
     // - <Delayed /> > <a /> must be clickable (while text is invisible)
     // - #tl-dr-play for UserJS (as example)
@@ -118,7 +118,7 @@ const LauncherElementsInput = observer(({launchStore}: {launchStore: LaunchStore
                 </p>
                 <p>
                     For play, used dataset should have{' '}
-                    { launchStore.elementsParseError ? <>no <a href="#parsing" className='text-danger'>parsing errors</a></> : "no parsing errors" }, 
+                    { error ? <>no <a href="#parsing" className='text-danger'>parsing errors</a></> : "no parsing errors" }, 
                     and{' '}
                     { launchStore.elementsLogicErrors.length ? <>no <a href="#logical-errors" className='text-danger'>logical errors</a></> : "no logical errors" }, 
                     and (please) 
@@ -251,7 +251,7 @@ const LauncherElementsParseError = observer(({launchStore}: {launchStore: Launch
     </>
 });
 
-const LauncherElementsParsingNothingToParse = observer(({launchStore}: {launchStore: LaunchStore}) => {
+const LauncherElementsParsingNothingToParse = observer(() => {
     return <>
         <p>Nothing to parse.</p>
         <p>Use predefined dataset (mockup), or put your own CSV file.</p>
@@ -289,7 +289,7 @@ const LauncherElementsParsing = observer(({launchStore}: {launchStore: LaunchSto
                 </h4>
             </div>
             <div className="card-body ">
-                { state === "nothing" && <LauncherElementsParsingNothingToParse key="parse-nothing" launchStore={launchStore} /> }
+                { state === "nothing" && <LauncherElementsParsingNothingToParse key="parse-nothing" /> }
                 { state === "error" && <LauncherElementsParseError key="parse-er" launchStore={launchStore} /> }
                 { state === "ok" && <LauncherElementsParseOk key="parse-ok" launchStore={launchStore} /> }
             </div>

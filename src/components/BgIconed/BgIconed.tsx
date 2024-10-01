@@ -4,16 +4,11 @@ import './BgIconed.css';
 import './BgIconed.x.css';
 import './BgIconed.y.css';
 
-type Tbg = {
-    icons: string[],
-};
 type TbgIcon = {
     i: number;
     i_3: number;
     i_7: number;
     i_10: number;
-    // i_20: number;
-    // i_77: number;
     id: string;
     x: number;
     y: number;
@@ -235,16 +230,18 @@ export const BgIconed = observer((
         iStart = 30,
         iStep = 30,
         iStepMultipty = 1,
+        xCount = 5,
+        yCount = 5,
     }: {
         randomSeed: number
         className?: string,
         iStart?: number,
         iStep?: number,
         iStepMultipty?: number,
+        xCount?: number,
+        yCount?: number,
     }
 ) => {
-    const xCount = 5;
-    const yCount = 5;
     const icons: TbgIcon[] = [];
     let i = 0;
     for (let y = 0; y < yCount; y++) {

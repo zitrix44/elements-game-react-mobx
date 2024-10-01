@@ -6,6 +6,7 @@ import { envNumber } from "../utils";
 type TaddOptions = {
     skipInit?: boolean;
     skipLevel?: boolean;
+    skipReorder?: boolean;
 };
 
 export default class ElementsStore {
@@ -23,8 +24,9 @@ export default class ElementsStore {
     }
 
     addMany(data: Tadd[], options: TaddOptions = {}): Element[] {
-        const options_ = { ...options, skipLevel: true };
+        const options_ = { ...options, skipLevel: true, skipReorder: true };
         const elements = data.map(v => this.addOne(v, options_));
+        // @TODO: tail.length === tail.filter(...).length
         const iterMax = Math.max(elements.length+1, envNumber('FIND_ELEMENTS_LEVEL_MAX_ITERATION') || 1000);
         let iterCur = -1;
         const iter = (tail: Element[]) => {
@@ -43,6 +45,9 @@ export default class ElementsStore {
             iter(tail.filter(v => v.level === -1));
         }
         iter(elements.slice());
+        if (!options.skipReorder) {
+            this.#reorder();
+        }
         return elements;
     }
 
@@ -62,6 +67,9 @@ export default class ElementsStore {
         }
         this.array.push(v);
         this.byId[v.id] = v;
+        if (!options.skipReorder) {
+            this.#reorder();
+        }
         return v;
     }
 
@@ -73,6 +81,13 @@ export default class ElementsStore {
         const parentLevels = parentIds.map(v => this.byId[v].level);
         const distantLevel = Math.max.apply(Math, parentLevels);
         return distantLevel + 1;
+    }
+
+    #reorder() {
+        this.array.sort((a:Element, b:Element) => {
+            if (a.level === b.level) return a.title > b.title ? 1 : -1;
+            return a.level > b.level ? 1 : -1;
+        })
     }
 
     startWithParsed(elements: Tcsv[]) {

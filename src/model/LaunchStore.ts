@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { formatId, Tcsv, TError } from "./ElementsStore.utils";
 import { RootStore } from "./RootStore";
 
