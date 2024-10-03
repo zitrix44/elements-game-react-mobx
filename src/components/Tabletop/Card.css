@@ -1,0 +1,54 @@
+.ecard {
+    /* NOTE: .card used in bootstrap, "e" means "element" */
+    position: relative;
+    width: 150px;
+    height: 150px;
+    transform-origin: left top;
+    font-size: var(--ecard-font-size);
+    line-height: 1.2;
+    font-family: "Noto Serif", "Segoe UI", sans-serif;
+}
+.ecard-border {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: inherit;
+    height: inherit;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 2px solid gray;
+    background: #cccccc66;
+    backdrop-filter: blur(5px);
+    clip-path: polygon(
+        10% 0%,
+        90% 0%,
+        100% 10%,
+        100% 90%,
+        90% 100%,
+        10% 100%,
+        0% 90%,
+        0% 10%
+    );
+}
+.ecard-content {
+    position: relative;
+    width: inherit;
+    height: inherit;
+}
+.ecard-icon {
+    margin-bottom: 0.5rem;
+}
+.ecard-icon, .ecard-icon .material-symbols-outlined {
+    display: block;
+    font-size: var(--ecard-icon-size);
+    line-height: var(--ecard-icon-size);
+}
+.ecard-icon .material-symbols-outlined {
+    width: var(--ecard-icon-size);
+    margin: auto;
+}
+.ecard-title {
+    margin: 0 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+}

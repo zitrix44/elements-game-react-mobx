@@ -1,0 +1,51 @@
+.ecard-title {
+    word-break: break-word;
+    hyphens: auto;
+    /*
+        "Communication" will breaks as: "Com", "muni-", "cation" // 
+        "extinguisher": "extin-", "guish", "er"
+        "accident": "acci-", "dent"
+        "Rocket": "Rocke", "t"
+        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm": "mmmmmmmm-", "mmmmmmmm-", "mmmmmmmm-", "mmmmm"
+        (chrome 129, win 10)
+    */
+}
+.ecard {
+    & {
+        --ecard-icon-size: var(--ecard-icon-size-regular);
+    }
+    &.chars_0_7 {
+        --ecard-icon-size: var(--ecard-icon-size-larger);
+    }
+    &.chars_20_25,  &.chars_25_30 {
+        --ecard-icon-size: var(--ecard-icon-size-smaller);
+    }
+    &.chars_10_15.chars_word_10_15 .ecard-title {
+        /* 
+            for: "Atmosphere", "Communication"
+            not for: "Force majeure" 
+        */
+        font-size: 0.82em; /* e.g. 20 */
+    }
+    &.chars_15_20.chars_word_10_15 .ecard-title {
+        /* for: "Fire extinguisher", not for: "Miscommunication" */ 
+        font-size: 0.82em;
+    }
+    &.chars_15_20.chars_word_15_20 .ecard-title {
+        /* for: "Miscommunication", not for: "Fire extinguisher" */ 
+        font-size: 0.92em; /* e.g. 22 */
+        /* all hails to hyphens */
+    }
+    &.chars_20_25 .ecard-title {
+        /* for "12345 12345 12345 ++", "123456 1234567890 12345", "123456789012345678904444" */
+        font-size: 0.92em;
+    }
+    &.chars_20_25.chars_word_10_15 .ecard-title, &.chars_20_25.chars_word_15_20 .ecard-title, &.chars_20_25.chars_word_20_25 .ecard-title {
+        /* for: "123456 1234567890 12345", not for: "12345 12345 12345 ++" */ 
+        font-size: 0.75em; /* e.g. 18 */
+    }
+    &.chars_25_30 .ecard-title {
+        /* for "12345678901234567890999999999", "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm" */
+        font-size: 0.667em; /* e.g. 16 */
+    }
+}
