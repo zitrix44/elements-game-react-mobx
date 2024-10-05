@@ -1,4 +1,194 @@
 .cauldron {
-    width: 500px;
-    height: 500px;
+    & {
+        position: relative;
+        width: 740px;
+        height: 400px;
+        /* background: white; */
+    }
+    * {
+        /* box-sizing: border-box; */
+    }
+    .cauldron-surface {
+        position: absolute;
+        left: 20px;
+        top: 50px;
+        border-radius: 50%;
+        background: blue;
+        width: 700px;
+        height: 200px;
+    }
+    .cauldron-body-top-back {
+        & {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 720px;
+            height: 140px;
+            overflow: hidden;
+        }
+        .cauldron-body-left-1 {
+            position: absolute;
+            left: 1px;
+            bottom: 0px;
+            width: 9px;
+            height: 20px;
+            background: gray;
+        }
+        .cauldron-body-right-1 {
+            position: absolute;
+            right: 1px;
+            bottom: 0px;
+            width: 9px;
+            height: 20px;
+            background: gray;
+        }
+        .cauldron-body-center-1 {
+            position: absolute;
+            left: 50%;
+            bottom: 100px;
+            width: 10px;
+            margin-left: -5px;
+            height: 30px;
+            background: gray;
+        }
+        .cauldron-body-arc-1 {
+            position: absolute;
+            left: 1px;
+            right: 1px;
+            top: 10px;
+            height: 220px;
+            background: lightgray;
+            border-radius: 50%;
+        }
+        .cauldron-body-arc-2 {
+            & {
+                position: absolute;
+                left: 2px;
+                right: 2px;
+                top: 20px;
+                height: 220px;
+                background: gray;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+            .cauldron-left-shadow {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                height: 200px;
+                width: 50%;
+                background: 
+                    linear-gradient(90deg, rgba(0,0,0,0.3) 30px, rgba(0,0,0,0) 100%),
+                    linear-gradient(35deg, rgba(255,0,0,0.1) 30px, rgba(255,0,111,0) 70%)
+                ;
+            }
+            .cauldron-right-shadow {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                height: 200px;
+                width: 25%;
+                background: 
+                    linear-gradient(100deg, rgba(255,255,255,0) 30px, rgba(255,255,255,0.3) 30%, rgba(255,0,0,0) 100%)
+                ;
+            }
+        }
+    }
+    .cauldron-body-top-front {
+        & {
+            position: absolute;
+            left: 10px;
+            top: 120px;
+            width: 720px;
+            height: 140px;
+            overflow: hidden;
+        }
+        .cauldron-body-arc-1 {
+            position: absolute;
+            left: 1px;
+            right: 1px;
+            top: -80px;
+            height: 180px;
+            border: 5px solid lightgray;
+            border-width: 0px 0px 10px 0px;
+            border-radius: 50%;
+            box-shadow: 0px 20px 0px 0px gray, 0px 40px 0px -2px gray;
+        }
+    }
+    .cauldron-body-bottom {
+        & {
+            position: absolute;
+            left: 10px;
+            top: 150px;
+            width: 720px;
+            height: 250px;
+            overflow: hidden;
+        }
+        .cauldron-body-left-1 {
+            position: absolute;
+            left: 15px;
+            bottom: 50px;
+            border-radius: 50%;
+            background: gray;
+            width: 100px;
+            height: 250px;
+            transform-origin: center center;
+            transform: rotate(340deg);
+        }
+        .cauldron-body-right-1 {
+            position: absolute;
+            right: 15px;
+            bottom: 50px;
+            border-radius: 50%;
+            background: gray;
+            width: 100px;
+            height: 250px;
+            transform-origin: center center;
+            transform: rotate(-340deg);
+        }
+        .cauldron-body-bottom-1 {
+            position: absolute;
+            left: 86px;
+            right: 86px;
+            bottom: 34px;
+            height: 60px;
+            background: gray;
+            border-radius: 50%;
+        }
+        .cauldron-body-middle-1 {
+            position: absolute;
+            left: 80px;
+            top: 0px;
+            right: 80px;
+            bottom: 70px;
+            background: gray;
+        }
+        .cauldron-right-shadow {
+            position: absolute;
+            left: 50%;
+            top: 0px;
+            bottom: 0px;
+            width: 100px;
+            height: 100%;
+            background: red;
+        }
+    }
+    .cauldron-shadows {
+        & {
+            position: absolute;
+            left: 0px;
+            width: 100%;
+            top: 0px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .cauldron-shadow-1 {
+            position: absolute;
+            right: 200px;
+            bottom: 40px;
+            width: 200px;
+            height: 150px;
+            background: #ff000066;
+        }   
+    }
 }

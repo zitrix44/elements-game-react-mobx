@@ -66,11 +66,11 @@ card-shape-comix-clip
 card-shape-comix-border
 */
 .ecard-clip-fill {
-    clip-path: url(#card-shape-comix-clip);
+    clip-path: url(#card-shape-pentagon-clip);
 }
 .ecard-clip-stroke {
     background: var(--ecard-stroke);
-    clip-path: url(#card-shape-comix-border);
+    clip-path: url(#card-shape-pentagon-border);
 }
 .ecard-content {
     position: relative;

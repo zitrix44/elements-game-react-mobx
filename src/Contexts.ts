@@ -7,6 +7,7 @@ export { StoreContext, RootStore, useContext };
 
 const useRootStore = () => {
   const store = useContext(StoreContext);
+  // TODO: заменить [store] на store
   return [store];
 };
 
