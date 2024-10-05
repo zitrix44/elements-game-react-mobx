@@ -1,0 +1,36 @@
+/*
+    TOC: 
+        --copy-button
+        --disclaimer
+        --ecard
+*/
+
+html {
+    --copy-button-color: var(--bs-primary);
+
+    --disclaimer-click-text: "Click for show this spoiler";
+    --disclaimer-color: #ced4da33;
+    --disclaimer-color-stripe: #ced4da99;
+    --disclaimer-hover-color: #ced4daff;
+    --disclaimer-hover-color-stripe: #ced4da00;
+
+    --ecard-title-color: rgb(94, 55, 0);
+    --ecard-icon-color: var(--ecard-title-color);
+    --ecard-clipped-title-color: var(--ecard-title-color);
+    --ecard-clipped-title-text-shadow: 2px 0px 1px rgba(255, 255, 255, 0.75);
+    --ecard-clipped-icon-color: var(--ecard-icon-color);
+    --ecard-clipped-icon-text-shadow: 1px 0px 0px rgba(255, 255, 255, 0.25), 1px 0px 2px rgba(255, 255, 255, 1), 2px 0px 1px var(--ecard-stroke);
+    --ecard-unclipped-title-color: var(--ecard-title-color);
+    --ecard-unclipped-icon-color: var(--ecard-icon-color);
+    --ecard-unclipped-opacity: 0.75;
+    --ecard-background: rgba(208, 174, 108, 0.7);
+    --ecard-background-gradient: linear-gradient(23deg, rgba(2,0,36,0) 0%, rgba(255,255,255,1) 100%);
+    --ecard-stroke: rgb(255, 100, 50);
+    --ecard-stroke: hsl(14.63deg 100% 59.8%);
+    --ecard-stroke: hwb(14.63deg 19.6% 0%);
+    --ecard-icon-size-regular: 60px;
+    --ecard-icon-size-larger: 70px;
+    --ecard-icon-size-smaller: 50px;
+    --ecard-icon-size: var(--ecard-icon-size-regular);
+    --ecard-font-size: 24px;
+}

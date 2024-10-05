@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 export type TElementBase = {
     id: string;
+    i?: number;
     title: string;
     parentIds: string[];
 };
@@ -12,6 +13,7 @@ export type TElementVisual = {
 };
 
 export type TElementRuntime = {
+    i?: number;
     discovered: number; // когда был элемент? (0 === еще не открыт)
     level: number;
 };
@@ -20,6 +22,8 @@ export type TElement = TElementBase & TElementVisual & TElementRuntime;
 
 export default class Element implements TElement {
     id: string;
+    i: number;
+    i_0_7: number;
     title: string;
     parentIds: string[];
     mdIcon: string = "";
@@ -37,12 +41,16 @@ export default class Element implements TElement {
     static isRuntime(data: Partial<TElement>): data is TElementRuntime {
         if (data.discovered) return true;
         if (data.level !== -1) return true;
+        if (data.i) return true;
         return false;
     }
 
     constructor(data: Partial<TElement> & TElementBase) {
         makeAutoObservable(this); 
         this.id = data.id;
+        this.setI(0);
+        this.i = 0;
+        this.i_0_7 = 0;
         this.title = data.title;
         this.parentIds = data.parentIds;
         if (this.isRoot) {
@@ -70,9 +78,15 @@ export default class Element implements TElement {
         this.level = v;
     }
 
+    setI(i: number) {
+        this.i = Math.floor(i);
+        this.i_0_7 = Math.floor(i % 7);
+    }
+
     setRuntime(data: TElementRuntime) {
         if (data.discovered) this.discovered = data.discovered;
         if (data.level !== -1) this.setLevel(data.level);
+        if (typeof data.i == 'number') this.setI(data.i);
     }
 
     init(data: TElementRuntime & Partial<TElementVisual>) {

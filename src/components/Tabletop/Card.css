@@ -1,34 +1,76 @@
 .ecard {
+    user-select: none;
+}
+.ecard, .ecard.ecard-size {
     /* NOTE: .card used in bootstrap, "e" means "element" */
     position: relative;
-    width: 150px;
-    height: 150px;
     transform-origin: left top;
     font-size: var(--ecard-font-size);
     line-height: 1.2;
     font-family: "Noto Serif", "Segoe UI", sans-serif;
 }
-.ecard-border {
+.ecard-size {
     position: absolute;
     left: 0px;
     top: 0px;
+    width: 150px;
+    height: 150px;
+}
+.ecard-content {
+    color: var(--ecard-title-color);
+}
+.ecard-content-clicpped {
+    color: var(--ecard-clipped-title-color);
+}
+.ecard-content-clicpped .ecard-title {
+    text-shadow: var(--ecard-clipped-title-text-shadow);
+}
+.ecard-content-clicpped .ecard-icon {
+    text-shadow: var(--ecard-clipped-icon-text-shadow);
+}
+.ecard-content-unclicpped {
+    color: var(--ecard-unclipped-title-color);
+    opacity: var(--ecard-unclipped-opacity);
+}
+.ecard-icon {
+    color: var(--ecard-icon-color);
+}
+.ecard-content-clicpped .ecard-icon {
+    color: var(--ecard-clipped-icon-color);
+}
+.ecard-content-unclicpped .ecard-icon {
+    color: var(--ecard-unclipped-icon-color);
+}
+.ecard-bg {
+    /* backdrop-filter: blur(5px); */
+    background: var(--ecard-background);
+}
+.ecard-bg::after {
+    content: "\0a0";
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
     width: inherit;
     height: inherit;
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 2px solid gray;
-    background: #cccccc66;
-    backdrop-filter: blur(5px);
-    clip-path: polygon(
-        10% 0%,
-        90% 0%,
-        100% 10%,
-        100% 90%,
-        90% 100%,
-        10% 100%,
-        0% 90%,
-        0% 10%
-    );
+    background: var(--ecard-background-gradient);
+}
+/*
+card-shape-basic-clip
+card-shape-basic-border
+card-shape-ruined-clip
+card-shape-ruined-border
+card-shape-pentagon-clip
+card-shape-pentagon-border
+card-shape-comix-clip
+card-shape-comix-border
+*/
+.ecard-clip-fill {
+    clip-path: url(#card-shape-comix-clip);
+}
+.ecard-clip-stroke {
+    background: var(--ecard-stroke);
+    clip-path: url(#card-shape-comix-border);
 }
 .ecard-content {
     position: relative;

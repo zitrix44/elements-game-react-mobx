@@ -1,16 +1,5 @@
 @import './fonts.css';
 @import './icons.css';
 @import './z-index.css';
-html {
-    --copy-button-color: var(--bs-primary);
-    --disclaimer-click-text: "Click for show this spoiler";
-    --disclaimer-color: #ced4da33;
-    --disclaimer-color-stripe: #ced4da99;
-    --disclaimer-hover-color: #ced4daff;
-    --disclaimer-hover-color-stripe: #ced4da00;
-    --ecard-icon-size-regular: 60px;
-    --ecard-icon-size-larger: 70px;
-    --ecard-icon-size-smaller: 50px;
-    --ecard-icon-size: var(--ecard-icon-size-regular);
-    --ecard-font-size: 24px;
-}
+@import './variables.css';
+/* TODO: закинуть CSS-файлы в CSS-папку */

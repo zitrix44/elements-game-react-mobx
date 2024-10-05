@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { RootStore } from "./RootStore";
+import { toastInfo, toastError } from '../utils/toasts';
 
 type TcopyTextOptionsFormat = {
     trim: boolean;
@@ -37,12 +38,11 @@ export default class RootStoreUtils {
     }
 
     toastInfo(msg: string) {
-        // https://fkhadra.github.io/react-toastify/introduction/
-        toast.info(msg);
+        toastInfo(msg);
     }
 
     toastError(msg: string) {
-        toast.error(msg);
+        toastError(msg);
     }
 
     copyByClick(e: React.MouseEvent<HTMLUnknownElement, MouseEvent>, options?: Partial<TcopyTextOptions>): true | string {

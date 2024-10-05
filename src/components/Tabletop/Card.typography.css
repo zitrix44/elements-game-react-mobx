@@ -20,6 +20,7 @@
     &.chars_20_25,  &.chars_25_30 {
         --ecard-icon-size: var(--ecard-icon-size-smaller);
     }
+
     &.chars_10_15.chars_word_10_15 .ecard-title {
         /* 
             for: "Atmosphere", "Communication"
@@ -47,5 +48,14 @@
     &.chars_25_30 .ecard-title {
         /* for "12345678901234567890999999999", "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm" */
         font-size: 0.667em; /* e.g. 16 */
+    }
+    
+    &.chars_0_7 .ecard-icon {
+        /* for: "Water" */
+        margin-top: 8px;
+    }
+    &.chars_10_15.chars_word_0_7 .ecard-icon {
+        /* for: "Fire truck", not for: "Force majeure"  */
+        margin-top: 8px;
     }
 }
