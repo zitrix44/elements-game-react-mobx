@@ -3,6 +3,7 @@
         --copy-button
         --disclaimer
         --ecard
+    + z-index.css defines --z-index-...
 */
 
 html {
@@ -33,4 +34,6 @@ html {
     --ecard-icon-size-smaller: 50px;
     --ecard-icon-size: var(--ecard-icon-size-regular);
     --ecard-font-size: 24px;
+
+    --incauldron-icon-size: 120px;
 }

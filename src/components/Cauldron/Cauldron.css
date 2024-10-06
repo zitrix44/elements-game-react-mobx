@@ -1,8 +1,8 @@
 .cauldron {
-  &, .cauldron-bg, .cauldron-rotate, .cauldron-border {
+  &, .cauldron-bg {
     position: relative;
-    width: 740px;
-    height: 200px;
+    width: 836px;
+    height: 303px;
     /* background: white; */
   }
   & {
@@ -12,96 +12,71 @@
     position: absolute;
     left: 0px;
     top: 0px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.75);
+    background: transparent url(/cauldron.png) left top no-repeat;
   }
-  .cauldron-border {
-    border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.8);
-    border-width: 1px 7px 5px 3px;
-    box-shadow: 
-        -8px -6px 12px -17px aqua,
-        0px 0px 20px 3px rgba(255, 255, 255, 1), 
-        10px 10px 30px 20px rgba(255, 255, 255, 1), 
-        inset -8px -5px 24px -14px aqua
-    ;
-  }
-  .cauldron-rotate {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    transform: skewY(-5deg);
-  }
-  .cauldron-waves {
-    position: absolute;
-    width: 100px;
-    height: 30px;
-    transform: skewY(-5deg);
-  }
-  .cauldron-wave-arc {
-    width: 25%;
-    height: 100%;
-    border: 0px solid rgba(255, 255, 255, 0.7);
-    border-width: 0px 0px 5px 0px;
-    border-radius: 50%;
-    animation: cauldron-wave 3.3s ease 0s infinite;
-    box-shadow: 2px 2px 0px rgba(0, 255, 255, 0.075);
-  }
-  .cauldron-wave-a {
-    position: absolute;
-    left: 0%;
-    top: 0%;
-    animation-duration: 4.2s;
-  }
-  .cauldron-wave-b {
-    position: absolute;
-    left: 20%;
-    top: 0%;
-    animation-delay: 1.7s;
-  }
-  .cauldron-wave-c {
-    position: absolute;
-    left: 40%;
-    top: 0%;
-    animation-duration: 4.4s;
-    animation-delay: 0.75s;
-  }
-  .cauldron-wave-d {
-    position: absolute;
-    left: 60%;
-    top: 0%;
-    animation-duration: 3.1s;
-    animation-timing-function: ease-in;
-  }
-  .cauldron-wave-e {
-    position: absolute;
-    left: 80%;
-    top: 0%;
-    animation-timing-function: ease-out;
+  .cauldron-wave {
+    & {
+      position: absolute;
+      width: 140px;
+      height: 38px;
+      background: transparent url(/cauldron-wave.png) left top no-repeat;
+      animation: cauldron-wave 9s ease-in-out 0s infinite;
+    }
+    &.cauldron-wave-0 {
+      left: 190px;
+      top: 60px;
+      animation-delay: -12.3s;
+    }
+    &.cauldron-wave-1 {
+      left: 500px;
+      top: 100px;
+      animation-delay: -23.4s;
+    }
+    &.cauldron-wave-2 {
+      left: 250px;
+      top: 180px;
+      animation-delay: -34.5s;
+    }
+    &.cauldron-wave-3 {
+      left: 150px;
+      top: 160px;
+      animation-delay: -7s;
+    }
+    &.cauldron-wave-4 {
+      left: 260px;
+      top: 140px;
+      animation-delay: -9.7s;
+    }
   }
   .cauldron-icon {
     & {
         position: absolute;
         left: 0px;
         top: 0px;
+        cursor: pointer; /* maybe, macos fallback */
+        cursor: alias;
     }
     &.cauldron-icon-0 {
-        left: 50px;
-        top: 20px;
+        left: 150px;
+        top: 60px;
     }
     &.cauldron-icon-1 {
-        left: 250px;
-        top: 70px;
+      left: 580px;
+      top: 15px;
     }
     &.cauldron-icon-2 {
-        left: 400px;
-        top: -40px;
+      left: 400px;
+      top: 90px;
     }
     .cauldron-icon-container {
         position: relative;
         animation: cauldron-icon-container 10s ease-in-out infinite;
-        width: 120px;
-        height: 120px;
+        width: var(--incauldron-icon-size);
+        height: var(--incauldron-icon-size);
+        margin-top: 0px;
+        box-sizing: content-box;
+        border-bottom: 0px solid transparent;
+        transition: margin-top 0.2s linear, border-bottom-width 0.2s linear;
     }
     &.cauldron-icon-0 .cauldron-icon-container {
         animation-duration: 11s;
@@ -118,7 +93,7 @@
         position: absolute;
         left: 0px;
         top: 0px;
-        font-size: 120px;
+        font-size: var(--incauldron-icon-size);
         overflow: hidden;
         color: rgb(94 55 0);
     }
@@ -129,7 +104,7 @@
         width: 100%;
         height: 60%;
         overflow: hidden;
-        opacity: 0.7;
+        opacity: 1;
     }
     .cauldron-icon-over-the-sea {
         position: absolute;
@@ -144,6 +119,22 @@
         top: unset;
         bottom: 0px;
         text-shadow: 2px 2px 5px aqua;
+    }
+    .cauldron-icon-under-the-sea, .cauldron-icon-over-the-sea {
+      transition: height 0.2s linear;
+    }
+    &:hover .cauldron-icon-container {
+      margin-top: -30px;
+      border-bottom: 30px solid transparent;
+      animation-play-state: paused;
+    }
+    &:hover .cauldron-icon-under-the-sea {
+      height: 80%;
+      /* top: -30px; */
+    }
+    &:hover .cauldron-icon-over-the-sea {
+      height: 20%;
+      /* bottom: 30px; */
     }
   }
 }

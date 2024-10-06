@@ -1,4 +1,9 @@
 .page-game {
+    .cauldron {
+        position: sticky;
+        top: -20px;
+        z-index: var(--z-index-the-cauldron);
+    }
     .ecard {
         margin: 10px;
     }

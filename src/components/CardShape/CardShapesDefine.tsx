@@ -38,6 +38,7 @@ const useSVG = ({id, width=WIDTH, borderWidth=BORDER_WIDTH, fill, stroke, stroke
             fill: fill || "none",
         };
         if (stroke) {
+            // TODO: stroke не используется, viewBox константный
             toSvg.stroke = stroke;
             toSvg.strokeWidth = (borderWidth/100)+'px';
             if (strokeOpacity) toSvg.strokeOpacity = strokeOpacity;

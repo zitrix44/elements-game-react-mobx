@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { formatId, parseCSV, findLogicalErrorsInElements, TError, type Tadd, type Tcsv } from "./ElementsStore.utils";
+import { formatId, parseCSV, findLogicalErrorsInElements, TError, type Tadd, type Tcsv, concatIds, sortIds } from "./ElementsStore.utils";
 import Element from "./Element";
 import { envNumber } from "../utils";
 
@@ -12,8 +12,11 @@ type TaddOptions = {
 export default class ElementsStore {
     array: Element[] = [];
     byId: Record<string, Element> = {};
+    mdIconById: Record<string, string> = {};
 
     static formatId = formatId;
+    static sortIds = sortIds;
+    static concatIds = concatIds;
 
     constructor() {
         makeAutoObservable(this);
@@ -67,6 +70,7 @@ export default class ElementsStore {
         }
         this.array.push(v);
         this.byId[v.id] = v;
+        this.mdIconById[v.id] = v.mdIcon;
         if (!options.skipReorder) {
             this.#reorder();
         }

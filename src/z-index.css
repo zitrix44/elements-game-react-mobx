@@ -2,4 +2,5 @@
 
 html {
     --z-index-tooltip-on-hover: 1080; /* as $zindex-tooltip https://getbootstrap.com/docs/5.3/layout/z-index/ */
+    --z-index-the-cauldron: 1079;
 }

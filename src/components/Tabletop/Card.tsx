@@ -38,7 +38,9 @@ const useTypography = (title:string): [string, number, number] => {
     return [className, charsInTitle, charsInLongestWord];
 };
 
-const Card = observer(({element}: {element: Element}) => {
+export type TCardOnClick = (id: string) => void;
+
+const Card = observer(({element, onClick}: {element: Element, onClick?: TCardOnClick}) => {
     const [classNameChars] = useMemo(() => useTypography(element.title), [element.title]);
     const className = useMemo(() => {
         return [
@@ -52,7 +54,7 @@ const Card = observer(({element}: {element: Element}) => {
             .join(' ');
     }, [element.id, element.i_0_7, classNameChars]);
     return <>
-        <div className={className} data-card-id={element.id}>
+        <div className={className} data-card-id={element.id} onClick={()=>onClick?.(element.id)}>
             <div className="pe-none ecard-size ecard-bg ecard-clip-fill"></div>
             <div className="ecard-size ecard-clip-fill ecard-content-clicpped">
                 <CardContent title={element.title} mdIcon={element.mdIcon} />

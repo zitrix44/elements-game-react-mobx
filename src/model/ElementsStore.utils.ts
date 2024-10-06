@@ -3,6 +3,10 @@ import { TElement, TElementBase, TElementRuntime, TElementVisual } from "./Eleme
 
 export const formatId = (id: string): string => (id || "").trim().toLowerCase(); // без ошибки за пустой id в утилях
 
+type TidOrHole = string | undefined | null;
+export const sortIds = (array: TidOrHole[]): string[] => array.filter(v => typeof v === 'string').filter(v => v.length).sort();
+export const concatIds = (array: TidOrHole[]): string => sortIds(array).join(" ");
+
 export type Tadd = Partial<TElement> & TElementBase;
 export type Tcsv = TElementBase & TElementVisual & Pick<TElementRuntime, "discovered" | "level">;
 export type TError = {

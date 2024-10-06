@@ -1,5 +1,7 @@
 .ecard {
     user-select: none;
+    cursor: alias; /* maybe, macos fallback */
+    cursor: cell;
 }
 .ecard, .ecard.ecard-size {
     /* NOTE: .card used in bootstrap, "e" means "element" */

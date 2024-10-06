@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { concatIds } from "./ElementsStore.utils";
 
 export type TElementBase = {
     id: string;
@@ -52,7 +53,7 @@ export default class Element implements TElement {
         this.i = 0;
         this.i_0_7 = 0;
         this.title = data.title;
-        this.parentIds = data.parentIds;
+        this.parentIds = data.parentIds.slice().sort();
         if (this.isRoot) {
             this.discovered = Date.now();
             this.level = 0;
@@ -66,6 +67,10 @@ export default class Element implements TElement {
 
     get isRoot(): boolean {
         return this.parentIds.length === 0;
+    }
+
+    get parents(): string {
+        return concatIds(this.parentIds);
     }
 
     setVisual(data: Partial<TElementVisual>) {
