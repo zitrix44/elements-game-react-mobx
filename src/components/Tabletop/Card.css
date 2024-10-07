@@ -2,6 +2,11 @@
     user-select: none;
     cursor: alias; /* maybe, macos fallback */
     cursor: cell;
+    top: 0px;
+    transition: top 0.06s linear;
+}
+.ecard:hover {
+    top: -10px;
 }
 .ecard, .ecard.ecard-size {
     /* NOTE: .card used in bootstrap, "e" means "element" */
@@ -68,11 +73,11 @@ card-shape-comix-clip
 card-shape-comix-border
 */
 .ecard-clip-fill {
-    clip-path: url(#card-shape-pentagon-clip);
+    clip-path: url(#card-shape-comix-clip);
 }
 .ecard-clip-stroke {
     background: var(--ecard-stroke);
-    clip-path: url(#card-shape-pentagon-border);
+    clip-path: url(#card-shape-comix-border);
 }
 .ecard-content {
     position: relative;

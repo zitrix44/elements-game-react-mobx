@@ -4,7 +4,7 @@ import CauldronStore from "./CauldronStore";
 import Element from "./Element";
 
 export default class DiscoverStore {
-    // магазин открытий; что-то в этом есть
+    // магазин открытий; и не поспоришь
     #elementsStore: ElementsStore;
     #cauldronStore: CauldronStore;
     discovered: Element[] = [];
@@ -23,7 +23,13 @@ export default class DiscoverStore {
         reaction(
             () => this.#cauldronStore.containsRecipeFor,
             containsRecipeFor => {
-                if (!containsRecipeFor.length) return;
+                // если в котле находится рецепт (набор элементов) для нового элемента - откроем новый элемент (и оповестим пользователя)
+                // если рецепт пропал из котла (из-за .discover) - ничего не делаем
+                // измениться рецепт не может по правилам игры (может появиться, пропасть, снова появиться, снова пропасть)
+                if (!containsRecipeFor.length) {
+                    // NOTE: lazy/atom были бы техничнее, но и потребовали бы больше кода
+                    return;
+                }
                 this.discovered = containsRecipeFor.map(id => this.#elementsStore.byId[id]);
                 this.discovered.forEach(v => v.discover());
             }
