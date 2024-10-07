@@ -1,0 +1,433 @@
+.discovered-overlay {
+    & {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        overflow: hidden;
+        /* TODO: не давать скроллить страницу (пока оверлей видимый)... и подумать, есть ли в этом смысл? */
+        overscroll-behavior: contain; /* :( */
+        /* background: rgba(0,0,0,0.5); */
+        /* backdrop-filter: blur(10px); */
+        animation: discovered-overlay-fadein 1s linear 0s 1 forwards;
+        z-index: var(--z-index-overlay);
+    }
+    .discovered-line {
+        position: absolute;
+        left: -200px;
+        right: 0px;
+        background: #f0f;
+        transform-origin: right top;
+        animation: discovered-line-fadein 0.2s ease-in 0s 1 forwards;
+    }
+    .discovered-line-1 {
+        height: 33vh;
+        top: 5%;
+        rotate: -20deg;
+        border-top: 20px solid rgb(243, 113, 243);
+        border-bottom: 20px solid rgb(243, 113, 243);
+    }
+    .discovered-line-2 {
+        height: 28vh;
+        top: 50%;
+        rotate: -10deg;
+        border-top: 20px solid rgb(243, 113, 243);
+        border-bottom: 20px solid rgb(243, 113, 243);
+        overflow: hidden; /* draw bug in chrome 129, win 10 */
+    }
+    .discovered-line-margin {
+        margin-right: 100px;
+        margin-left: 100px;
+    }
+    .discovered-line-1 {
+        .discovered-line-margin {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1, h2 {
+            margin: 0;
+            line-height: 1;
+            font-family: "Noto Serif", "Segoe UI", sans-serif;
+            animation: discovered-header-fadein 0.05s linear 0s 1 forwards;
+        }
+        h1 {
+            white-space: nowrap;
+            margin-bottom: 15px;
+            font-size: 80px;
+            text-align: right;
+            color: rgba(0,0,0,0.75);
+        }
+        h2 {
+            & {
+                margin-bottom: 15px; 
+                font-size: 50px;
+                text-align: right;
+            }
+            span {
+                color: rgba(0,0,0,0.65);
+            }
+        }
+    }
+    .discovered-line-2 {
+        & {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .discovered-line-margin {
+            margin-right: 30px;
+            margin-left: 0px;
+            display: flex;
+        }
+    }
+    .blotted-card {
+        & {
+            position: relative;
+            width: 350px;
+            height: 220px;
+            margin-right: 10px;
+        }
+        .blotted-card-icon {
+            width: 220px;
+            height: 220px;
+            background: aquamarine;
+        }
+        .blotted-card-text, .material-symbols-outlined {
+            color: #f0f;
+        }
+        .blotted-card-text {
+            position: absolute;
+            top: 50%;
+            left: 180px;
+            right: 0px;
+            font-size: 36px;
+            transform: translateY(-50%);
+            word-break: break-word;
+            hyphens: auto;
+            line-height: 1.1;
+        }
+        .material-symbols-outlined {
+            display: block;
+            font-size: 150px;
+            position: absolute;
+            top: 30px;
+            left: 20px;
+        }
+        .blot-1 {
+            position: absolute;
+            left: -10px;
+            top: 30px;
+            scale: 0.5;
+        }
+        .blot-1b {
+            position: absolute;
+            left: -70px;
+            top: 0px;
+            scale: 0.6;
+            rotate: 150deg;
+        }
+        .blot-1c {
+            position: absolute;
+            left: -20px;
+            top: -40px;
+            scale: 0.85;
+            rotate: 130deg;
+        }
+        .blot-1d {
+            position: absolute;
+            left: 0px;
+            top: 40px;
+            scale: 0.95;
+            rotate: -130deg;
+        }
+        .blot-2 {
+            position: absolute;
+            left: 100px;
+            top: 30px;
+            rotate: 30deg;
+        }
+        .blot-3 {
+            position: absolute;
+            left: 140px;
+            top: -30px;
+            rotate: -70deg;
+            scale: 0.9;
+        }
+        .blot-4 {
+            position: absolute;
+            left: 240px;
+            top: -30px;
+            rotate: 70deg;
+            scale: 0.7;
+        }
+        .blot-5 {
+            position: absolute;
+            left: 200px;
+            top: 30px;
+            rotate: 70deg;
+            scale: 0.6;
+        }
+    }
+    .blot-circle {
+        fill: rgba(255,255,255,0.9);
+        animation: blot-circle 0.6s ease-out 1 forwards;
+    }
+    .inkwell {
+        & {
+            filter: url(#fx-inkwell);
+            position: absolute;
+            top: 0;
+            right: 50px;
+            width: 500px;
+            height: 200px;
+        }
+        .bubble {
+            position: absolute;
+            top: -50px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            animation: bubble-drop 2s linear 0s 1 forwards, bubble-collapse 2s linear 0s 1 forwards;
+        }
+        .bubble_0_6 {
+            animation-duration: 2.2s;
+        }
+        .bubble_1_6 {
+            animation-duration: 1.8s;
+        }
+        .bubble_2_6 {
+            animation-duration: 3s;
+        }
+        .bubble_3_6 {
+            animation-duration: 1s;
+        }
+        .bubble_4_6 {
+            animation-duration: 1.5s;
+        }
+        .bubble_5_6 {
+            animation-duration: 2.1s;
+        }
+        .bubble_0_7 {
+            animation-delay: 0s, 0s;
+        }
+        .bubble_1_7 {
+            animation-delay: 1.3s, 1.3s;
+        }
+        .bubble_2_7 {
+            animation-delay: 0.3s, 0.3s;
+        }
+        .bubble_3_7 {
+            animation-delay: 1s, 1s;
+        }
+        .bubble_4_7 {
+            animation-delay: 2.5s, 2.5s;
+        }
+        .bubble_5_7 {
+            animation-delay: 2s, 2s;
+        }
+        .bubble_6_7 {
+            animation-delay: 2.2s, 2.2s;
+        }
+        .bubble_0_11 {
+            width: 50px;
+            height: 50px;
+        }
+        .bubble_1_11 {
+            width: 40px;
+            height: 40px;
+        }
+        .bubble_2_11 {
+            width: 30px;
+            height: 30px;
+        }
+        .bubble_3_11 {
+            width: 35px;
+            height: 35px;
+        }
+        .bubble_4_11 {
+            width: 45px;
+            height: 45px;
+        }
+        .bubble_5_11 {
+            width: 70px;
+            height: 50px;
+        }
+        .bubble_6_11 {
+            width: 70px;
+            height: 30px;
+        }
+        .bubble_7_11 {
+            width: 60px;
+            height: 50px;
+        }
+        .bubble_8_11 {
+            width: 25px;
+            height: 50px;
+        }
+        .bubble_9_11 {
+            width: 45px;
+            height: 25px;
+        }
+        .bubble_10_11 {
+            width: 50px;
+            height: 25px;
+        }
+        .bubble_0_20 {
+            left: 0%;
+        }
+        .bubble_1_20 {
+            left: 95%;
+        }
+        .bubble_2_20 {
+            left: 5%;
+        }
+        .bubble_3_20 {
+            left: 25%;
+        }
+        .bubble_4_20 {
+            left: 60%;
+        }
+        .bubble_5_20 {
+            left: 10%;
+        }
+        .bubble_6_20 {
+            left: 90%;
+        }
+        .bubble_7_20 {
+            left: 30%;
+        }
+        .bubble_8_20 {
+            left: 50%;
+        }
+        .bubble_9_20 {
+            left: 75%;
+        }
+        .bubble_10_20 {
+            left: 45%;
+        }
+        .bubble_11_20 {
+            left: 85%;
+        }
+        .bubble_12_20 {
+            left: 55%;
+        }
+        .bubble_13_20 {
+            left: 15%;
+        }
+        .bubble_14_20 {
+            left: 70%;
+        }
+        .bubble_15_20 {
+            left: 80%;
+        }
+        .bubble_16_20 {
+            left: 10%;
+        }
+        .bubble_17_20 {
+            left: 77%;
+        }
+        .bubble_18_20 {
+            left: 7%;
+        }
+        .bubble_19_20 {
+            left: 47%;
+        }
+    }
+    .discovered-overlay-close-always-visible {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 250px;
+        height: 250px;
+        cursor: pointer;
+    }
+    .discovered-overlay-close {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        font-size: 100px;
+        color: rgba(255, 0, 255, 0.404);
+        text-shadow: 2px 2px 0 red;
+        transition: font-size 0.3s ease;
+        animation: discovered-overlay-close 1s ease-out 0s 1 forwards;
+    }
+    .discovered-overlay-close-always-visible:hover .discovered-overlay-close {
+        font-size: 120px;
+    }
+}
+
+@keyframes discovered-overlay-fadein {
+    0% {
+        backdrop-filter: blur(0px);
+        background: rgba(0,0,0,0);
+    }
+    70% {
+        background: rgba(0,0,0,0.5);
+    }
+    100% {
+        backdrop-filter: blur(10px);
+        background: rgba(0,0,0,0.5);
+    }
+}
+@keyframes discovered-header-fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes discovered-line-fadein {
+    0% {
+        scale: 0 1;
+    }
+    100% {
+        scale: 1 1;
+    }
+}
+
+@keyframes blot-circle {
+    0% { r: 10px } 
+    100% { r: 100px }
+}
+@keyframes bubble-drop {
+    0% {
+        top: -50px;
+    }
+    100% {
+        top: 150px;
+    }
+}
+@keyframes bubble-collapse {
+    0% {
+        scale: 1;
+    }
+    30% {
+        scale: 1;
+    }
+    98% {
+        scale: 0.0001; /* old ff bug, maybe unactual */
+        display: block;
+    }
+    99% {
+        scale: 0.0001;
+        display: none;
+    }
+    100% {
+        scale: 0;
+        display: none;
+    }
+}
+
+@keyframes discovered-overlay-close {
+    0% {
+        transform: translateX(-200px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}

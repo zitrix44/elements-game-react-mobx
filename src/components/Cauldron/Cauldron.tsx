@@ -1,9 +1,7 @@
 import { observer } from "mobx-react-lite";
-import useRootStore, { RootStore, StoreContext, useContext } from "../../Contexts";
-import Delayed from "../Delayed";
+import useRootStore from "../../Contexts";
 
 import "./Cauldron.css";
-import { useCallback } from "react";
 
 const CauldronIcon = observer(({i, mdIcon}: {i: number, mdIcon: string})=>{
     return <>
@@ -67,32 +65,6 @@ const Cauldron = observer(() => {
         slotCmdIcon={rootStore.elementsStore.mdIconById[rootStore.cauldronStore.slotC||'']} 
         onClick={onClick}
     />
-    // rootStore
-    return <div 
-        className="cauldron"
-    >
-        <div key="bg" className="cauldron-bg"></div>
-        <div key="wave0" className="cauldron-wave cauldron-wave-0"></div>
-        <CauldronIcon i={0} mdIcon={"Air"} key="i0" />
-        <CauldronIcon i={1} mdIcon={"fire_truck"} key="i1" />
-        <div key="wave1" className="cauldron-wave cauldron-wave-1"></div>
-        <CauldronIcon i={2} mdIcon={"Microbes"} key="i2" />
-        <div key="wave2" className="cauldron-wave cauldron-wave-2"></div>
-        {/* 
-        <Delayed delay={11} key="wave-1">
-            <CauldronWave left="100px" top="100px" />
-        </Delayed>
-        <Delayed delay={111} key="wave-2">
-            <CauldronWave left="300px" top="0px" />
-        </Delayed>
-        <Delayed delay={202} key="wave-3">
-            <CauldronWave left="500px" top="50px" />
-        </Delayed>
-        <Delayed delay={313} key="wave-4">
-            <CauldronWave left="400px" top="120px" />
-        </Delayed> */}
-        555
-    </div>;
 });
 
 export default Cauldron;

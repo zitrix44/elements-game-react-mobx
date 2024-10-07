@@ -3,6 +3,8 @@ import { ReactNode, useState } from "react";
 
 import './Disclaimer.css';
 
+// TODO: Spoiler
+
 type TDisclaimerProps = {
     children: ReactNode, 
     forceOpened?: boolean,
