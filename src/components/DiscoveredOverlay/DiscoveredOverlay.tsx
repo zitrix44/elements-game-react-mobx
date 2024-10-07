@@ -130,7 +130,7 @@ const DiscoveredOverlay = observer(({elements, countOfUndiscoveredElement, onClo
                 </div>
             </Delayed>
             <div className="discovered-overlay-close-always-visible" onClick={()=>onClose()}>
-                <Delayed delay={9000*0}>
+                <Delayed delay={9000}>
                     <span className="material-symbols-outlined discovered-overlay-close pe-none">disabled_by_default</span>  
                 </Delayed>
             </div>
