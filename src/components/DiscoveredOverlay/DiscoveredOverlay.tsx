@@ -1,8 +1,12 @@
 import { observer } from "mobx-react-lite";
+import CONST from "../../const";
 import Element from "../../model/Element";
 
-import './DiscoveredOverlay.css';
 import Delayed from "../Delayed";
+import { useEffect } from "react";
+
+import './DiscoveredOverlay.css';
+import './DiscoveredOverlay.discovered-overlay-opened.css';
 
 const Inkwell = observer(() => {
     // https://codepen.io/z-/pen/zYxdRQy
@@ -89,8 +93,19 @@ const DiscoveredHeader = observer(({discoveredElementsCount, countOfUndiscovered
 });
 
 const DiscoveredOverlay = observer(({elements, countOfUndiscoveredElement, onClose}: {elements:Element[], countOfUndiscoveredElement:number, onClose:()=>void}) => {
+    useEffect(()=>{
+        const onKeyUp = () => onClose(); // props.onClose mutable (possible)
+        document.body.classList.add(CONST.BODY_CLASSNAME_DISCOVERED_OVERLAY_OPENED);
+        // keypress event ignore esc button
+        document.body.addEventListener('keyup', onKeyUp, false);
+        return () => {
+            document.body.classList.remove(CONST.BODY_CLASSNAME_DISCOVERED_OVERLAY_OPENED);
+            document.body.removeEventListener('keyup', onKeyUp, false);
+        }
+    }, []);
     return <>
         <section className="discovered-overlay" role="dialog">
+            <div className="discovered-overlay-bg"></div>
             <Delayed delay={1500}>
                 <div className="discovered-line discovered-line-1 pe-none">
                     <Delayed delay={700}>
@@ -115,7 +130,7 @@ const DiscoveredOverlay = observer(({elements, countOfUndiscoveredElement, onClo
                 </div>
             </Delayed>
             <div className="discovered-overlay-close-always-visible" onClick={()=>onClose()}>
-                <Delayed delay={9000}>
+                <Delayed delay={9000*0}>
                     <span className="material-symbols-outlined discovered-overlay-close pe-none">disabled_by_default</span>  
                 </Delayed>
             </div>

@@ -27,7 +27,7 @@ type TtoSVG = {
     strokeOpacity?: string;
 };
 
-const useSVG = ({id, width=WIDTH, borderWidth=BORDER_WIDTH, fill, stroke, strokeOpacity}: TfigureProps) => {
+const useSVG = ({width=WIDTH, borderWidth=BORDER_WIDTH, fill, stroke, strokeOpacity}: TfigureProps) => {
     const [toSvg, setToSvg] = useState<TtoSVG>({width, height: width, viewBox: "0 0 1 1", xmlns: "http://www.w3.org/2000/svg"});
     useEffect(()=>{
         const toSvg: TtoSVG = {

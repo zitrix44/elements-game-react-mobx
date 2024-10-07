@@ -1,0 +1,10 @@
+.discovered-overlay-opened .cauldron {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 1600px) {
+  .discovered-overlay-opened .cauldron {
+    left: 100px;
+  }
+}

@@ -26,9 +26,7 @@ type TcauldronProps = {
 };
 
 export const CauldronDrawer = observer(({slotAmdIcon, slotBmdIcon, slotCmdIcon, onClick}: TcauldronProps) => {
-    return <div 
-        className="cauldron"
-    >
+    return <div className="cauldron">
         <div key="bg" className="cauldron-bg"></div>
         <div key="wave0" className="cauldron-wave cauldron-wave-0"></div>
         {slotAmdIcon && <span key="i0" onClick={()=>onClick?.("a", slotAmdIcon)}><CauldronIcon i={0} mdIcon={slotAmdIcon} /></span> }
@@ -46,6 +44,7 @@ const Cauldron = observer(() => {
     // TODO: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feDisplacementMap + @keyframes 0% { r: 10px } 100% { r: 100px }
     const [rootStore] = useRootStore();
     const onClick: TcauldronProps["onClick"] = (slot, mdIcon) => {
+        // при отрисовке котла поверх оверлея, кликабельность будет скрыта стилями
         if (!mdIcon) return;
         switch(slot) {
             case "a":

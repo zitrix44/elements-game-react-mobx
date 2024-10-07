@@ -4,6 +4,7 @@ const CONST = {
     // LS_VERSION_KEY: "LS_VERSION",
     LS_PREFIX: "elGame__",
     LS_THEME_SHAPE_ID: "selectedShape",
+    BODY_CLASSNAME_DISCOVERED_OVERLAY_OPENED: "discovered-overlay-opened",
 };
 
 export default CONST;

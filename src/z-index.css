@@ -3,5 +3,6 @@
 html {
     --z-index-tooltip-on-hover: 1080; /* as $zindex-tooltip https://getbootstrap.com/docs/5.3/layout/z-index/ */
     --z-index-the-cauldron: 1078;
-    --z-index-overlay: 1079;
+    --z-index-overlay-bg: 1077;
+    --z-index-overlay-content: 1079;
 }
