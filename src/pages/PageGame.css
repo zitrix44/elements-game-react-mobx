@@ -1,10 +1,66 @@
 .page-game {
     .cauldron {
         position: sticky;
-        top: -20px;
+        top: -10px;
         z-index: var(--z-index-the-cauldron);
     }
     .ecard {
-        margin: 10px;
+        & {
+            margin: 10px;
+        }
+        &.ecard_0_7 .ecard-rotate {
+            transform: rotate(0deg);
+        }
+        &.ecard_1_7 .ecard-rotate {
+            transform: rotate(1deg);
+        }
+        &.ecard_2_7 .ecard-rotate {
+            transform: rotate(2deg);
+        }
+        &.ecard_3_7 .ecard-rotate {
+            transform: rotate(3deg);
+        }
+        &.ecard_4_7 .ecard-rotate {
+            transform: rotate(4deg);
+        }
+        &.ecard_5_7 .ecard-rotate {
+            transform: rotate(5deg);
+        }
+        &.ecard_6_7 .ecard-rotate {
+            transform: rotate(6deg);
+        }
+        &.ecard_0_7 .ecard-move {
+            transform: translate(-2px 0px)
+        }
+        &.ecard_1_7 .ecard-move {
+            transform: translate(5px -5px)
+        }
+        &.ecard_2_7 .ecard-move {
+            transform: translate(-3px -2px)
+        }
+        &.ecard_3_7 .ecard-move {
+            transform: translate(2px 0px)
+        }
+        &.ecard_4_7 .ecard-move {
+            transform: translate(3px 1px)
+        }
+        &.ecard_5_7 .ecard-move {
+            transform: translate(5px -3px)
+        }
+        &.ecard_6_7 .ecard-move {
+            transform: translate(4px 3px)
+        }
+        & .ecard-rotate, & .ecard-move {
+            transition: transform var(--ecard-transition-duration-back) ease-in-out;
+        }
+        &:hover .ecard-rotate, &:hover .ecard-move {
+            transition: transform var(--ecard-transition-duration-up-transform) ease-out;
+        }
+        &:hover .ecard-rotate {
+            transform: rotate(0deg);
+        }
+        &:hover .ecard-move {
+            transform: translate(0px 0px);
+        }
     }
 }

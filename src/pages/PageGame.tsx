@@ -11,9 +11,14 @@ import { toastError } from "../utils/toasts";
 import DiscoveredOverlay from "../components/DiscoveredOverlay/DiscoveredOverlay";
 
 import './PageGame.css';
+import { useEffect, useState } from "react";
 
 const PageGame = observer(() => {
+    const [isMounted, setIsMounted] = useState<boolean>(false);
     const [store] = useRootStore();
+    useEffect(()=>{
+        setIsMounted(true);
+    },[]);
     const elements = store.elementsStore.array;
     const onCardClick: TCardOnClick = (id) => {
         try {
@@ -27,15 +32,26 @@ const PageGame = observer(() => {
             <GameBG />
             <h1>PageGame 🎢 ({store.cauldronStore.containsRecipeFor.join(', ')})</h1>
             <Cauldron />
-            <div className="d-flex flex-wrap">
-                {elements.map(v => v.discovered ? <Card key={v.id} element={toJS(v)} onClick={onCardClick} /> : null)}
+            <div className={`ecards ${isMounted ? 'ecards-mounted': 'not-ecards-mounted'}`}>
+                <div className="d-flex flex-wrap">
+                    {elements.map(v => {
+                        if (!v.discovered) return null;
+                        if (store.discoverStore.discoveredId.includes(v.id)) return null;
+                        return <Card 
+                            key={v.id} 
+                            element={toJS(v)} 
+                            onClick={onCardClick} 
+                            drawHelloAnimation={isMounted} 
+                        />;
+                    })}
+                </div>
             </div>
             <ElementsList elements={toJS(elements)} />
             {
                 store.discoverStore.discovered.length &&
                 <DiscoveredOverlay 
                     elements={toJS(store.discoverStore.discovered)} 
-                    countOfUndiscoveredElement={10} 
+                    countOfUndiscoveredElement={store.elementsStore.undiscoveredElementsCount} 
                     onClose={()=>store.discoverStore.reset()}
                 />
             }

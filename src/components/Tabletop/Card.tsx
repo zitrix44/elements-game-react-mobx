@@ -40,7 +40,7 @@ const useTypography = (title:string): [string, number, number] => {
 
 export type TCardOnClick = (id: string) => void;
 
-const Card = observer(({element, onClick}: {element: Element, onClick?: TCardOnClick}) => {
+const Card = observer(({element, onClick, drawHelloAnimation}: {element: Element, onClick?: TCardOnClick, drawHelloAnimation?: boolean}) => {
     const [classNameChars] = useMemo(() => useTypography(element.title), [element.title]);
     const className = useMemo(() => {
         return [
@@ -48,6 +48,7 @@ const Card = observer(({element, onClick}: {element: Element, onClick?: TCardOnC
             'ecard-size',
             'ecard-' + element.id, 
             `ecard_${element.i_0_7}_7`,
+            drawHelloAnimation && 'ecard_draw-hello-animation',
         ]
             .concat(classNameChars)
             .filter(v => !!v)
@@ -55,13 +56,17 @@ const Card = observer(({element, onClick}: {element: Element, onClick?: TCardOnC
     }, [element.id, element.i_0_7, classNameChars]);
     return <>
         <div className={className} data-card-id={element.id} onClick={()=>onClick?.(element.id)}>
-            <div className="pe-none ecard-size ecard-bg ecard-clip-fill"></div>
-            <div className="ecard-size ecard-clip-fill ecard-content-clicpped">
-                <CardContent title={element.title} mdIcon={element.mdIcon} />
-            </div>
-            <div className="pe-none ecard-size ecard-clip-stroke ecard-border"></div>
-            <div className="pe-none ecard-size ecard-content-unclicpped">
-                <CardContent title={element.title} mdIcon={element.mdIcon} />
+            <div className="pe-none ecard-rotate">
+                <div className="pe-none ecard-move">
+                    <div className="pe-none ecard-size ecard-bg ecard-clip-fill"></div>
+                    <div className="ecard-size ecard-clip-fill ecard-content-clicpped">
+                        <CardContent title={element.title} mdIcon={element.mdIcon} />
+                    </div>
+                    <div className="pe-none ecard-size ecard-clip-stroke ecard-border"></div>
+                    <div className="pe-none ecard-size ecard-content-unclicpped">
+                        <CardContent title={element.title} mdIcon={element.mdIcon} />
+                    </div>
+                </div>
             </div>
         </div>
     </>;

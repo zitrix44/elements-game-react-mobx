@@ -9,6 +9,7 @@ export default class ThemeStore {
     selectedShapeId: string = "";
     cardClipId: string = "";
     cardBorderId: string = "";
+    noDiscoverOverlay = false;
 
     constructor() {
         makeAutoObservable(this);

@@ -21,7 +21,7 @@ export class RootStore {
         this.launchStore = new LaunchStore(this);
         this.themeStore = new ThemeStore();
         this.cauldronStore = new CauldronStore(this.elementsStore);
-        this.discoverStore = new DiscoverStore(this.elementsStore, this.cauldronStore);
+        this.discoverStore = new DiscoverStore(this.elementsStore, this.themeStore, this.cauldronStore);
     }
 
     startWithParsed() {

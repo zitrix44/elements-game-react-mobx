@@ -3,18 +3,22 @@
     cursor: alias; /* maybe, macos fallback */
     cursor: cell;
     top: 0px;
-    transition: top 0.06s linear;
+    transition: top var(--ecard-transition-duration-back) linear;
+}
+.ecard.ecard_draw-hello-animation {
+    animation: ecard_draw-hello-animation 2s ease 0s 1 forwards;
 }
 .ecard:hover {
     top: -10px;
+    transition: top var(--ecard-transition-duration-up-top) linear;
 }
 .ecard, .ecard.ecard-size {
     /* NOTE: .card used in bootstrap, "e" means "element" */
     position: relative;
-    transform-origin: left top;
     font-size: var(--ecard-font-size);
     line-height: 1.2;
     font-family: "Noto Serif", "Segoe UI", sans-serif;
+    transform-origin: left top;
 }
 .ecard-size {
     position: absolute;
@@ -100,4 +104,21 @@ card-shape-comix-border
     margin: 0 0.5rem;
     padding-bottom: 0.5rem;
     text-align: center;
+}
+
+@keyframes ecard_draw-hello-animation {
+    0% {
+        transform-origin: right bottom;
+        transform: scale(0) rotate(90deg);
+    }
+    50% {
+        transform-origin: left top;
+    }
+    99% {
+        transform: scale(1);
+    }
+    100% {
+        transform-origin: left top;
+        transform: unset;
+    }
 }

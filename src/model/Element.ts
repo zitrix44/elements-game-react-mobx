@@ -50,8 +50,8 @@ export default class Element implements TElement {
         makeAutoObservable(this); 
         this.id = data.id;
         this.setI(0);
-        this.i = 0;
-        this.i_0_7 = 0;
+        this.i = data.i || 0;
+        this.i_0_7 = this.i % 7;
         this.title = data.title;
         this.parentIds = data.parentIds.slice().sort();
         if (this.isRoot) {

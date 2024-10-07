@@ -35,5 +35,9 @@ html {
     --ecard-icon-size: var(--ecard-icon-size-regular);
     --ecard-font-size: 24px;
 
+    --ecard-transition-duration-up-top: 0.1s;
+    --ecard-transition-duration-up-transform: 0.2s;
+    --ecard-transition-duration-back: 0.5s;
+
     --incauldron-icon-size: 120px;
 }

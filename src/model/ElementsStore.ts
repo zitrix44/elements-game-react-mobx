@@ -22,6 +22,10 @@ export default class ElementsStore {
         makeAutoObservable(this);
     }
 
+    get undiscoveredElementsCount(): number {
+        return this.array.filter(v => !v.discovered).length;
+    }
+
     hasId(id: string) {
        return id in this.byId; 
     }
@@ -61,7 +65,7 @@ export default class ElementsStore {
             console.info({er, exist: this.byId[id], arrived: data});
             throw new Error(er);
         }
-        const v = new Element(data);
+        const v = new Element({i: this.array.length, ...data});
         if (!options.skipInit) {
             if (Element.isRuntime(data)) v.init(data);
             if (!options.skipLevel) {
