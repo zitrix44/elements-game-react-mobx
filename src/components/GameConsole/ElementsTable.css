@@ -1,0 +1,151 @@
+.table-with-elements {
+    td, th {
+        padding: 10px 5px;
+    }
+    td:first-child, th:first-child {
+        padding-left: 10px;
+    }
+    td:last-child, th:last-child {
+        padding-right: 10px;
+    }
+    tbody td, tbody th {
+        vertical-align: top;
+    }
+    .thead-mdIcon {
+        &, &:first-child {
+            text-align: center;
+            vertical-align: middle;
+            padding: 0;
+        }
+        .material-symbols-outlined {
+            position: relative;
+            top: 2px;
+        }
+    }
+    .column-mdIcon {
+        & {
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+        .material-symbols-outlined {
+            font-size: 32px;
+            position: relative;
+            top: 4px;
+        }
+    }
+    .column-discovered {
+        .material-symbols-outlined {
+            font-size: 1em;
+            margin-right: 0.3em;
+            vertical-align: -3px;
+            opacity: 0.5;
+        }
+        .is-discovered .material-symbols-outlined {
+            margin-right: 0.15em;
+        }
+        .discoverable {
+            & {
+                cursor: default;
+            }
+            i {
+                border-bottom: 1px dotted;
+            }
+            &:hover {
+                .material-symbols-outlined {
+                    opacity: 0.6;
+                }
+                i {
+                    border-bottom-style: solid;
+                }
+            }
+        }
+    }
+    .column-parentIds {
+        .material-symbols-outlined {
+            font-size: 1.2em;
+            margin-right: 0.3em;
+            vertical-align: -4px;
+        }
+        .parent-is-discovered, .parent-isnt-discovered {
+            font-size: 1em;
+            opacity: 0.5;
+            vertical-align: -2px;
+        }
+    }
+    .thead-Actions {
+        padding-left: 15px;
+    }
+    .column-Actions {
+        & {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        .material-symbols-outlined {
+            position: relative;
+            top: 0;
+            border: 9px solid transparent;
+        }
+        .material-symbols-outlined:hover {
+            top: -2px;
+            cursor: default;
+        }
+    }
+    .actions-container {
+        &, .actions-block {
+            position: relative;
+            width: 86px;
+            height: 42px;
+            overflow: hidden;
+        }
+        .actions-default {
+            transform: translateY(0px);
+        }
+        .actions-default, .material-symbols-outlined {
+            transition: transform 0.3s ease-in;
+        }
+        .actions-deleting-confirmation {
+            & {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                pointer-events: none;
+            }
+            :first-child {
+                transform: translateX(-50px);
+            }
+            :last-child {
+                transform: translateX(50px);
+            }
+            .do-delete {
+                text-shadow: 1px 0px 0px red;
+            }
+        }
+        &.deleting {
+            .actions-deleting-confirmation {
+                & {
+                    pointer-events: revert;
+                }
+                :first-child {
+                    transform: translateX(0px);
+                }
+                :last-child {
+                    transform: translateX(0px);
+                }
+            }
+        }
+        &.deleting .actions-default, &.editing .actions-default {
+            transform: translateY(50px);
+        }
+    }
+    .editing-td {
+        padding: 0;
+    }
+    .element-id, .parent-only-id, .parent-title {
+        display: inline-block;
+        max-width: 100px;
+        text-overflow: ellipsis;
+        overflow:hidden;
+        white-space:nowrap;
+        vertical-align: bottom;
+    }
+}

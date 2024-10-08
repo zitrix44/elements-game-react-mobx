@@ -1,0 +1,233 @@
+import { observer } from "mobx-react-lite";
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+    RowData,
+    CellContext,
+} from '@tanstack/react-table';
+import Element, { TElementBase, type TElement } from '../../model/Element';
+
+import './ElementsTable.css';
+import React, { useState } from "react";
+
+export const groupById = (elements: TElement[]): Record<string, TElement> => {
+    const ret: Record<string, TElement> = {};
+    elements.forEach(v => ret[v.id] = v);
+    return ret;
+}
+
+export type TonElementDiscover = (id: string) => void;
+export type TonElementUpdate = (id: string, data: Partial<TElement>) => boolean;
+export type TonElementDelete = (id: string) => void;
+export type TonElementEdit = {
+    onElementDiscover?: TonElementDiscover;
+    onElementUpdate?: TonElementUpdate;
+    onElementDelete?: TonElementDelete,
+};
+
+declare module '@tanstack/react-table' {
+    interface TableMeta<TData extends RowData> {
+        onElementDiscover?: TonElementDiscover,
+        onElementUpdate?: TonElementUpdate,
+        onElementDelete?: TonElementDelete,
+        toggleElementEditing?: (show: boolean, id: string) => void,
+        elementById?: ReturnType<typeof groupById>,
+    }
+}
+
+const columnHelper = createColumnHelper<TElement>();
+
+const DiscoveredCell = observer(({at, id, onElementDiscover}: {at:number, id:string, onElementDiscover?: TonElementDiscover})=>{
+    return at ? <DiscoveredYes at={at} /> : <DiscoveredNo id={id} onElementDiscover={onElementDiscover} />;
+});
+const DiscoveredYes = observer(({at}: {at:number})=>{
+    return <>
+        <span key="yes" title={at+''} className="is-discovered">
+            <span className="material-symbols-outlined">check</span>
+            <i>Yes</i>
+        </span>
+    </>;
+});
+const DiscoveredNo = observer(({id, onElementDiscover}: {id:string, onElementDiscover?: TonElementDiscover})=>{
+    return <>
+        <span key="no" className={`isnt-discovered ${onElementDiscover ? 'discoverable' : ''}`} onClick={()=>onElementDiscover?.(id)}>
+            <span className="material-symbols-outlined">cancel</span>
+            <i>No</i>
+        </span>
+    </>;
+});
+
+const ParentItemOnlyId = observer(({id}: Pick<TElement, "id">) => {
+    return <div className="parent parent-only-id" title={id}>#{id}</div>;
+});
+const ParentItemRegular = observer(({id, mdIcon, title, discovered}: Pick<TElement, "id" | "mdIcon" | "title" | "discovered">) => {
+    return <>
+        <div className="parent parent-regular">
+            {
+                discovered 
+                    ? <span className="parent-is-discovered material-symbols-outlined" title="Discovered">check</span>
+                    : <span className="parent-isnt-discovered material-symbols-outlined" title="Not discovered">cancel</span>
+            }
+            <span className="parent-icon material-symbols-outlined">{mdIcon}</span>
+            <span className="parent-title" title={title}>{title}</span>
+        </div>
+    </>
+});
+const ParentsEmpty = observer(() => {
+    return <div className="parent parent-empty"><i>Is root element</i></div>;
+});
+
+const ParentsCell = observer(({parentIds, elementById}: {parentIds: string[], elementById?: ReturnType<typeof groupById>})=>{
+    if (!parentIds.length) return <ParentsEmpty />;
+    if (!elementById) {
+        return <>{parentIds.map((v,i) => <ParentItemOnlyId key={i+','+v} id={v} />)}</>
+    }
+    return <>
+        {parentIds.map((v,i) => <ParentItemRegular key={i+','+v} {...elementById[v]} />)}
+    </>
+});
+
+const ActionsDeleting = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
+    return <>
+        <div className="actions-block actions-deleting-confirmation">
+            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>cancel</span>
+            <span className="do-delete material-symbols-outlined" title="Delete">check</span>
+        </div>
+    </>
+});
+
+const ActionsDefault = observer(({info, startDeleting, startEditing}: {info: CellContext<TElement, null>, startDeleting: ()=>void, startEditing: () => void}) => {
+    return <>
+        <div className="actions-block actions-default">
+            { info.table.options.meta?.onElementUpdate ? <span className="material-symbols-outlined" title="Edit..." onClick={startEditing}>ink_pen</span> : null }
+            { info.table.options.meta?.onElementDelete ? <span className="material-symbols-outlined" title="Delete..." onClick={startDeleting}>delete</span> : null }
+        </div>
+    </>
+});
+
+const ActionsCell = observer(({info}: {info: CellContext<TElement, null>}) => {
+    const [deleting, setDeleting] = useState<boolean>(false);
+    const [editing, setEditing] = useState<boolean>(false);
+    return <>
+        <div className={`actions-container ${deleting ? 'deleting' : 'not-deleting'} ${editing ? 'editing' : 'not-editing'}`}>
+            <ActionsDefault 
+                info={info} 
+                startDeleting={()=>setDeleting(true)} 
+                startEditing={()=>{
+                    setEditing(true);
+                    info.table.options.meta?.toggleElementEditing?.(true, info.row.original.id);
+                }} 
+            />
+            <ActionsDeleting info={info} onCancel={()=>setDeleting(false)} />
+        </div>
+    </>;
+});
+
+const columns = [
+    columnHelper.accessor('mdIcon', {
+        header: () => <span className="material-symbols-outlined">helicopter</span>,
+        cell: info => {
+            return <span className="material-symbols-outlined">{info.getValue()}</span>
+        }
+    }),
+    columnHelper.accessor('id', {
+        header: "Id",
+        cell: info => <span className="element-id" title={info.getValue()}>{info.getValue()}</span>
+    }),
+    columnHelper.accessor('title', {
+        header: "Title",
+        cell: info => info.getValue()
+    }),
+    columnHelper.accessor('discovered', {
+        header: "Discovered",
+        cell: info => {
+            const at = info.getValue();
+            const id = info.row.original.id;
+            return <DiscoveredCell at={at} id={id} onElementDiscover={info.table.options.meta?.onElementDiscover} />;
+            // return at ? <IsDiscovered at={at} /> : <IsntDiscovered />;
+        }
+    }),
+    columnHelper.accessor('parentIds', {
+        // accessorFn: (row) => row.parentIds,
+        header: 'Parents',
+        cell: info => <ParentsCell parentIds={info.row.original.parentIds} elementById={info.table.options.meta?.elementById} />,
+    }),
+    columnHelper.accessor(()=>null, {
+        header: 'Actions',
+        cell: info => <ActionsCell info={info} />
+    })
+]
+
+const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TElement[], elementById: ReturnType<typeof groupById>, onEdit?: TonElementEdit}) => {
+    // const [store] = useRootStore();
+    const [editingIds, setEditingIds] = useState<string[]>(['air', 'jump']);
+    const table = useReactTable({
+      data: elements,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      initialState: {
+        columnVisibility: {
+            Actions: !!(onEdit?.onElementUpdate || onEdit?.onElementDelete)
+        }
+      },
+      meta: {
+        ...onEdit,
+        toggleElementEditing: (show: boolean, id: string) => {
+            setEditingIds( show ? [...editingIds, id] : editingIds.filter(_id => _id !== id) );
+        },
+        elementById,
+      }
+    });
+    return <>
+        <div className="table-with-elements table table-dark table-striped">
+            asd
+            <table>
+                <thead>
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
+                            <th key={header.id} className={`thead-${header.id}`}>
+                            {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                )}
+                            </th>
+                        ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody>
+                    {table.getRowModel().rows.map(row => (
+                        <React.Fragment key={row.id}>
+                            <tr key={row.id}>
+                                {row.getVisibleCells().map(cell => (
+                                    <td key={cell.id} className={`column-${cell.column.id}`}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>
+                                ))}
+                            </tr>
+                            {
+                                editingIds.includes(row.original.id)
+                                    ? 
+                                        <tr key={'edit,'+row.original.id} className="editing-tr">
+                                            <td colSpan={6} className="editing-td">
+                                                <div className="editing-container">
+                                                    editing?
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    : null
+                            }
+                        </React.Fragment>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </>;
+});
+
+export default ElementsTable;
