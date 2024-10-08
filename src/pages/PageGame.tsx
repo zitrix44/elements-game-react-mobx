@@ -12,6 +12,7 @@ import DiscoveredOverlay from "../components/DiscoveredOverlay/DiscoveredOverlay
 
 import './PageGame.css';
 import { useEffect, useState } from "react";
+import GameConsole from "../components/GameConsole/GameConsole";
 
 const PageGame = observer(() => {
     const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -48,13 +49,16 @@ const PageGame = observer(() => {
             </div>
             <ElementsList elements={toJS(elements)} />
             {
-                store.discoverStore.discovered.length &&
-                <DiscoveredOverlay 
-                    elements={toJS(store.discoverStore.discovered)} 
-                    countOfUndiscoveredElement={store.elementsStore.undiscoveredElementsCount} 
-                    onClose={()=>store.discoverStore.reset()}
-                />
+                store.discoverStore.discovered.length 
+                    ?
+                        <DiscoveredOverlay 
+                            elements={toJS(store.discoverStore.discovered)} 
+                            countOfUndiscoveredElement={store.elementsStore.undiscoveredElementsCount} 
+                            onClose={()=>store.discoverStore.reset()}
+                        />
+                    : null
             }
+            <GameConsole />
             <ToastContainer 
                 position="bottom-right"
                 theme="colored"

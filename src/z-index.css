@@ -5,4 +5,5 @@ html {
     --z-index-the-cauldron: 1078;
     --z-index-overlay-bg: 1077;
     --z-index-overlay-content: 1079;
+    --z-index-console: 1079;
 }

@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction, toJS } from "mobx";
+import { makeAutoObservable, reaction } from "mobx";
 import ElementsStore from "./ElementsStore";
 import CauldronStore from "./CauldronStore";
 import Element from "./Element";

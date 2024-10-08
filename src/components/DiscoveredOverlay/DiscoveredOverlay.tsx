@@ -6,7 +6,7 @@ import Delayed from "../Delayed";
 import { useEffect } from "react";
 
 import './DiscoveredOverlay.css';
-import './DiscoveredOverlay.discovered-overlay-opened.css';
+import './DiscoveredOverlay.Discovered-overlay-opened.css';
 
 const Inkwell = observer(() => {
     // https://codepen.io/z-/pen/zYxdRQy

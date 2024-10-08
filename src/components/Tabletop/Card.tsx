@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import useRootStore from "../../Contexts";
 import Element from "../../model/Element";
 
 import './Card.css';
