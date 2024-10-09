@@ -3,7 +3,7 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
-    width: 50vw;
+    width: 800px;
     background: white;
     z-index: var(--z-index-console);
     overflow: auto;

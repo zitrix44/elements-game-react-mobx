@@ -210,7 +210,7 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
       }
     });
     return <>
-        <div className="table-with-elements table table-dark table-striped">
+        <div className="table-with-elements table table-striped">
             asd
             <table>
                 <thead>
@@ -256,6 +256,7 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                                                         mdIcon={row.original.mdIcon}
                                                         title={row.original.title}
                                                         parentIds={row.original.parentIds}
+                                                        otherElements={elementById}
                                                     />
                                                 </div>
                                             </td>

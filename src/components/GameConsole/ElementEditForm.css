@@ -1,0 +1,7 @@
+.parent-element-option {
+    display: flex;
+    align-items: center;
+    .material-symbols-outlined {
+        margin-right: 0.5rem;
+    }
+}

@@ -1,4 +1,7 @@
 .table-with-elements {
+    table {
+        width: 100%;
+    }
     td, th {
         padding: 10px 5px;
     }
@@ -137,8 +140,14 @@
             text-shadow: 1px 0px 0px red;
         }
     }
-    .editing-td {
+    .editing-tr {
         padding: 0;
+    }
+    .editing-td {
+        &, &:first-child, &:last-child {
+            padding: 0;
+        }
+        box-shadow: inset 0px 10px 8px -10px black, inset 0px -10px 8px -10px black;
     }
     .tr-in-deleting {
         .column-mdIcon {
@@ -155,7 +164,8 @@
         }
     }
     .tr-in-editing {
-        filter: invert(100%);
+        /* filter: invert(100%); */
+        background: #e9eee1;
     }
     .element-id, .parent-only-id, .parent-title {
         display: inline-block;
