@@ -8,6 +8,8 @@ import { toastError, toastInfo, toastSuccess } from "../../utils/toasts";
 import './GameConsole.css';
 import { TElement } from "../../model/Element";
 
+let cheatsCount = 0;
+
 const GameConsole = observer(() => {
     const [store] = useRootStore();
     const elements = toJS(store.elementsStore.array);
@@ -17,11 +19,13 @@ const GameConsole = observer(() => {
             const el = store.elementsStore.byId[id];
             if (el.discovered) {
                 toastError(`${el.title} is already discovered`);
+                return;
             } else {
+                cheatsCount++;
                 el.discover();
-                toastInfo(`Cheater`);
+                toastInfo(`Cheater ${cheatsCount > 1 ? `×${cheatsCount}` : ""}`);
                 if (store.elementsStore.undiscoveredElementsCount === 0) {
-                    toastSuccess(`You win ;)`);
+                    toastSuccess(`Console win ;)`);
                 }
             }
         },
@@ -35,7 +39,6 @@ const GameConsole = observer(() => {
     };
     return <>
         <div className="console">
-            asd
             <ElementsTable elements={elements} elementById={elementById} onEdit={onEdit} />
         </div>
     </>;

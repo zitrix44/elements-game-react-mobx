@@ -17,7 +17,12 @@ import { StoreContext } from './Contexts.ts';
 store.launchStore.setElementsCSV(mockups.elements.v1);
 store.launchStore.start();
 
-createRoot(document.getElementById('root')!).render(
+createRoot(
+  document.getElementById('root')!,
+  {
+    identifierPrefix: "elements-app-",
+  }
+).render(
   <>
     <StoreContext.Provider value={store}>
       <App />

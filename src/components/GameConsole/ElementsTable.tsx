@@ -11,6 +11,7 @@ import Element, { TElementBase, type TElement } from '../../model/Element';
 
 import './ElementsTable.css';
 import React, { useState } from "react";
+import ElementEditForm from "./ElementEditForm";
 
 export const groupById = (elements: TElement[]): Record<string, TElement> => {
     const ret: Record<string, TElement> = {};
@@ -33,6 +34,9 @@ declare module '@tanstack/react-table' {
         onElementUpdate?: TonElementUpdate,
         onElementDelete?: TonElementDelete,
         toggleElementEditing?: (show: boolean, id: string) => void,
+        toggleElementDeleting?: (show: boolean, id: string) => void,
+        elementsEditingIds?: string[],
+        elementsDeletingIds?: string[],
         elementById?: ReturnType<typeof groupById>,
     }
 }
@@ -89,6 +93,15 @@ const ParentsCell = observer(({parentIds, elementById}: {parentIds: string[], el
     </>
 });
 
+const ActionsEditing = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
+    return <>
+        <div className="actions-block actions-editing-confirmation">
+            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>cancel</span>
+            <span className="do-save material-symbols-outlined" title="Save">check</span>
+        </div>
+    </>
+});
+
 const ActionsDeleting = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
     return <>
         <div className="actions-block actions-deleting-confirmation">
@@ -108,19 +121,29 @@ const ActionsDefault = observer(({info, startDeleting, startEditing}: {info: Cel
 });
 
 const ActionsCell = observer(({info}: {info: CellContext<TElement, null>}) => {
-    const [deleting, setDeleting] = useState<boolean>(false);
-    const [editing, setEditing] = useState<boolean>(false);
+    // const [deleting, setDeleting] = useState<boolean>(false);
+    // const [editing, setEditing] = useState<boolean>(false);
+    const id = info.row.original.id;
+    const deleting: boolean = info.table.options.meta?.elementsDeletingIds?.includes(id) || false;
+    const editing: boolean = info.table.options.meta?.elementsEditingIds?.includes(id) || false;
     return <>
         <div className={`actions-container ${deleting ? 'deleting' : 'not-deleting'} ${editing ? 'editing' : 'not-editing'}`}>
             <ActionsDefault 
                 info={info} 
-                startDeleting={()=>setDeleting(true)} 
+                // startDeleting={()=>setDeleting(true)} 
+                startDeleting={()=>{
+                    info.table.options.meta?.toggleElementDeleting?.(true, info.row.original.id)
+                }} 
                 startEditing={()=>{
-                    setEditing(true);
                     info.table.options.meta?.toggleElementEditing?.(true, info.row.original.id);
                 }} 
             />
-            <ActionsDeleting info={info} onCancel={()=>setDeleting(false)} />
+            <ActionsDeleting info={info} onCancel={()=>{
+                info.table.options.meta?.toggleElementDeleting?.(false, info.row.original.id)
+            }} />
+            <ActionsEditing info={info} onCancel={()=>{
+                info.table.options.meta?.toggleElementEditing?.(false, info.row.original.id)
+            }} />
         </div>
     </>;
 });
@@ -163,6 +186,7 @@ const columns = [
 const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TElement[], elementById: ReturnType<typeof groupById>, onEdit?: TonElementEdit}) => {
     // const [store] = useRootStore();
     const [editingIds, setEditingIds] = useState<string[]>(['air', 'jump']);
+    const [deletingIds, setDeletingIds] = useState<string[]>(['gravity', 'river']);
     const table = useReactTable({
       data: elements,
       columns,
@@ -174,9 +198,14 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
       },
       meta: {
         ...onEdit,
+        toggleElementDeleting: (show: boolean, id: string) => {
+            setDeletingIds( show ? [...deletingIds, id] : deletingIds.filter(_id => _id !== id) );
+        },
         toggleElementEditing: (show: boolean, id: string) => {
             setEditingIds( show ? [...editingIds, id] : editingIds.filter(_id => _id !== id) );
         },
+        elementsEditingIds: editingIds,
+        elementsDeletingIds: deletingIds,
         elementById,
       }
     });
@@ -203,7 +232,13 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                 <tbody>
                     {table.getRowModel().rows.map(row => (
                         <React.Fragment key={row.id}>
-                            <tr key={row.id}>
+                            <tr 
+                                key={row.id} 
+                                className={`
+                                    ${editingIds.includes(row.original.id) ? "tr-in-editing" : ""}
+                                    ${deletingIds.includes(row.original.id) ? "tr-in-deleting" : ""}
+                                `}
+                            >
                                 {row.getVisibleCells().map(cell => (
                                     <td key={cell.id} className={`column-${cell.column.id}`}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -216,7 +251,12 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                                         <tr key={'edit,'+row.original.id} className="editing-tr">
                                             <td colSpan={6} className="editing-td">
                                                 <div className="editing-container">
-                                                    editing?
+                                                    <ElementEditForm
+                                                        id={row.original.id}
+                                                        mdIcon={row.original.mdIcon}
+                                                        title={row.original.title}
+                                                        parentIds={row.original.parentIds}
+                                                    />
                                                 </div>
                                             </td>
                                         </tr>

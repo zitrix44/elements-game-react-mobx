@@ -84,6 +84,7 @@
             position: relative;
             top: 0;
             border: 9px solid transparent;
+            border-bottom-width: 11px;
         }
         .material-symbols-outlined:hover {
             top: -2px;
@@ -103,7 +104,7 @@
         .actions-default, .material-symbols-outlined {
             transition: transform 0.3s ease-in;
         }
-        .actions-deleting-confirmation {
+        .actions-deleting-confirmation, .actions-editing-confirmation {
             & {
                 position: absolute;
                 left: 0px;
@@ -116,29 +117,45 @@
             :last-child {
                 transform: translateX(50px);
             }
-            .do-delete {
-                text-shadow: 1px 0px 0px red;
-            }
         }
-        &.deleting {
-            .actions-deleting-confirmation {
-                & {
-                    pointer-events: revert;
-                }
-                :first-child {
-                    transform: translateX(0px);
-                }
-                :last-child {
-                    transform: translateX(0px);
-                }
+        &.deleting .actions-deleting-confirmation,
+        &.editing .actions-editing-confirmation {
+            & {
+                pointer-events: revert;
+            }
+            :first-child {
+                transform: translateX(0px);
+            }
+            :last-child {
+                transform: translateX(0px);
             }
         }
         &.deleting .actions-default, &.editing .actions-default {
             transform: translateY(50px);
         }
+        .do-delete {
+            text-shadow: 1px 0px 0px red;
+        }
     }
     .editing-td {
         padding: 0;
+    }
+    .tr-in-deleting {
+        .column-mdIcon {
+            background: linear-gradient(90deg, #ff660000 10%, #ff660066 90%);
+            text-shadow: 1px 0px 0px red;
+        }
+        .column-id {
+            background: #ff660066;
+            text-shadow: 1px 0px 0px red;
+        }
+        .column-title {
+            background: linear-gradient(-90deg, #ff660000 25%, #ff660066 90%);
+            text-shadow: 1px 0px 0px red;
+        }
+    }
+    .tr-in-editing {
+        filter: invert(100%);
     }
     .element-id, .parent-only-id, .parent-title {
         display: inline-block;
