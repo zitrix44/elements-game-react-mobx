@@ -15,12 +15,6 @@ type TMyElement = Pick<TElement, "id" | "mdIcon" | "title" | "parentIds">;
 type TOtherElement = Pick<TElement, "id" | "mdIcon" | "title">;
 type TElementEditFormProps = TMyElement & { otherElements: Record<string, TOtherElement> };
 
-const options_: TOption[] = [
-    { value: 'gravity', label: 'Gravity' },
-    { value: 'fire_extinguisher', label: 'Fire extinguisher' },
-    { value: 'grass', label: 'Grass' }
-];
-
 const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}: TElementEditFormProps) => {
     const htmlIdForId = useId();
     const htmlIdForTitle = useId();
@@ -77,9 +71,6 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
                     <Select 
                         options={options} 
                         // defaultValue={[{ value: 'grass', label: 'Grass' }]}
-                        filterOption={(data: TOption) => {
-                            return true;
-                        }}
                         value={selectedOptions}
                         placeholder={'Select 0-3 parents'}
                         isMulti
