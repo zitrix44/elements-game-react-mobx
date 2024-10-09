@@ -29,6 +29,7 @@
         & {
             padding-top: 1px;
             padding-bottom: 1px;
+            text-align: center;
         }
         .material-symbols-outlined {
             font-size: 32px;
@@ -147,25 +148,44 @@
         &, &:first-child, &:last-child {
             padding: 0;
         }
-        box-shadow: inset 0px 10px 8px -10px black, inset 0px -10px 8px -10px black;
+    }
+    .tr-even:not(.tr-in-deleting) {
+        --bs-table-bg: #f0f0f0;
+    }
+    .tr-in-deleting td {
+        background: var(--bs-table-bg);
     }
     .tr-in-deleting {
+        .column-mdIcon, .column-id, .column-title {
+            text-shadow: 1px 0px 0px #ffffff6b;
+        }
         .column-mdIcon {
-            background: linear-gradient(90deg, #ff660000 10%, #ff660066 90%);
-            text-shadow: 1px 0px 0px red;
+            background: linear-gradient(70deg, var(--bs-table-bg) 20px, #ff797999 80%);
         }
         .column-id {
-            background: #ff660066;
-            text-shadow: 1px 0px 0px red;
+            /* background: #ff797999; */
+            background: linear-gradient(-70deg, var(--bs-table-bg) 30%, #ff797999 80%);
         }
         .column-title {
-            background: linear-gradient(-90deg, #ff660000 25%, #ff660066 90%);
-            text-shadow: 1px 0px 0px red;
         }
     }
     .tr-in-editing {
         /* filter: invert(100%); */
         background: #e9eee1;
+    }
+    .editing-container {
+        /* max-height: fit-content; */ /* will broke the transition */
+        max-height: 777px;
+        overflow: hidden;
+        transition: max-height 0.9s ease-in, box-shadow 0.5s ease-in;
+        box-shadow: inset 0px 10px 8px -10px black, inset 0px -20px 16px -18px black;
+    }
+    .editing-tr-fadeout .editing-container {
+        transition: max-height 0.9s ease-in-out, box-shadow 0.9s ease-in;
+    }
+    .editing-tr-fadeout .editing-container, .editing-container.not-mounted {
+        max-height: 0px;
+        box-shadow: none;
     }
     .element-id, .parent-only-id, .parent-title {
         display: inline-block;

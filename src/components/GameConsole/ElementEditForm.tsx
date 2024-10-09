@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { TElement } from "../../model/Element";
 import Select from 'react-select';
@@ -20,6 +20,15 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
     const htmlIdForTitle = useId();
     const htmlIdForMdIcon = useId();
     const htmlIdForMdIconHint = useId();
+    const [notMounted, setNotMounted] = useState<boolean>(true);
+    useEffect(()=>{
+        const timeoutId = setTimeout(()=>{
+            setNotMounted(false);
+        }, 1);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, []);
     const formatOptionLabel = (data: TOption) => {
         return <div className="parent-element-option">
             <span className="material-symbols-outlined">{otherElements[data.value].mdIcon}</span>
@@ -31,53 +40,55 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
         .map(v => ({ value: v.id, label: v.title }));
     const selectedOptions = parentIds.map(id => ({value: id, label: otherElements[id].title}));
     return <>
-        <div className="mb-5">
-            <div className="row my-3 mx-1">
-                <div className="col-sm-1 col-form-label pe-0 text-end">
-                    <label htmlFor={htmlIdForTitle} className="">Title</label>
-                </div>
-                <div className="col-sm-7">
-                    <input type="text" name="title" className="form-control" id={htmlIdForTitle} value={title} />
-                </div>
-                <div className="col-sm-1 col-form-label pe-0 text-end">
-                    <label htmlFor={htmlIdForId} className="">Id</label>
-                </div>
-                <div className="col-sm-3">
-                    <input type="text" name="title" className="form-control" id={htmlIdForId} value={id} disabled />
-                </div>
-            </div>
-            <div className="row my-3 mx-1">
-                <div className="col-sm-1 col-form-label pe-0 text-end">
-                    <label htmlFor={htmlIdForMdIcon} className="">Icon</label>
-                </div>
-                <div className="col-sm-7">
-                    <input type="text" name="title" className="form-control" id={htmlIdForMdIcon} value={mdIcon} aria-describedby={htmlIdForMdIconHint} />
-                    <div id={htmlIdForMdIconHint} className="form-text">
-                        At <a href={`https://fonts.google.com/icons?selected=Material+Symbols+Outlined:${mdIcon}:FILL@1`} target='_blank'>Google's Icons</a> copy "Icon name" on icon's infopanel
+        <div className={`editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
+            <div className="mt-4 mb-5">
+                <div className="row my-3 mx-1">
+                    <div className="col-sm-1 col-form-label pe-0 text-end">
+                        <label htmlFor={htmlIdForTitle} className="">Title</label>
+                    </div>
+                    <div className="col-sm-7">
+                        <input type="text" name="title" className="form-control" id={htmlIdForTitle} value={title} />
+                    </div>
+                    <div className="col-sm-1 col-form-label pe-0 text-end">
+                        <label htmlFor={htmlIdForId} className="">Id</label>
+                    </div>
+                    <div className="col-sm-3">
+                        <input type="text" name="title" className="form-control" id={htmlIdForId} value={id} disabled />
                     </div>
                 </div>
-                <div className="col-sm ps-0 col-form-label d-flex align-items-center align-self-start">
-                    <span className="pe-2">
-                        Preview
-                    </span>
-                    <span className="material-symbols-outlined">{mdIcon}</span>
+                <div className="row my-3 mx-1">
+                    <div className="col-sm-1 col-form-label pe-0 text-end">
+                        <label htmlFor={htmlIdForMdIcon} className="">Icon</label>
+                    </div>
+                    <div className="col-sm-7">
+                        <input type="text" name="title" className="form-control" id={htmlIdForMdIcon} value={mdIcon} aria-describedby={htmlIdForMdIconHint} />
+                        <div id={htmlIdForMdIconHint} className="form-text">
+                            At <a href={`https://fonts.google.com/icons?selected=Material+Symbols+Outlined:${mdIcon}:FILL@1`} target='_blank'>Google's Icons</a> copy "Icon name" on icon's infopanel
+                        </div>
+                    </div>
+                    <div className="col-sm ps-0 col-form-label d-flex align-items-center align-self-start">
+                        <span className="pe-2">
+                            Preview
+                        </span>
+                        <span className="material-symbols-outlined">{mdIcon}</span>
+                    </div>
                 </div>
-            </div>
-            <div className="row my-3 mx-1">
-                <div className="col-sm-1 col-form-label pe-0 text-end">
-                    <label htmlFor={htmlIdForMdIcon} className="">Parents</label>
-                </div>
-                <div className="col-sm-7">
-                    <Select 
-                        options={options} 
-                        // defaultValue={[{ value: 'grass', label: 'Grass' }]}
-                        value={selectedOptions}
-                        placeholder={'Select 0-3 parents'}
-                        isMulti
-                        isSearchable
-                        openMenuOnFocus
-                        formatOptionLabel={formatOptionLabel} 
-                    />
+                <div className="row my-3 mx-1">
+                    <div className="col-sm-1 col-form-label pe-0 text-end">
+                        <label htmlFor={htmlIdForMdIcon} className="">Parents</label>
+                    </div>
+                    <div className="col-sm-7">
+                        <Select 
+                            options={options} 
+                            // defaultValue={[{ value: 'grass', label: 'Grass' }]}
+                            value={selectedOptions}
+                            placeholder={'Select 0-3 parents'}
+                            isMulti
+                            isSearchable
+                            openMenuOnFocus
+                            formatOptionLabel={formatOptionLabel} 
+                        />
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ import {
 import Element, { TElementBase, type TElement } from '../../model/Element';
 
 import './ElementsTable.css';
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ElementEditForm from "./ElementEditForm";
 
 export const groupById = (elements: TElement[]): Record<string, TElement> => {
@@ -96,7 +96,7 @@ const ParentsCell = observer(({parentIds, elementById}: {parentIds: string[], el
 const ActionsEditing = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
     return <>
         <div className="actions-block actions-editing-confirmation">
-            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>cancel</span>
+            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>disabled_by_default</span>
             <span className="do-save material-symbols-outlined" title="Save">check</span>
         </div>
     </>
@@ -105,7 +105,7 @@ const ActionsEditing = observer(({info, onCancel}: {info: CellContext<TElement, 
 const ActionsDeleting = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
     return <>
         <div className="actions-block actions-deleting-confirmation">
-            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>cancel</span>
+            <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>disabled_by_default</span>
             <span className="do-delete material-symbols-outlined" title="Delete">check</span>
         </div>
     </>
@@ -149,6 +149,15 @@ const ActionsCell = observer(({info}: {info: CellContext<TElement, null>}) => {
 });
 
 const columns = [
+    columnHelper.accessor('discovered', {
+        header: "Discovered",
+        cell: info => {
+            const at = info.getValue();
+            const id = info.row.original.id;
+            return <DiscoveredCell at={at} id={id} onElementDiscover={info.table.options.meta?.onElementDiscover} />;
+            // return at ? <IsDiscovered at={at} /> : <IsntDiscovered />;
+        }
+    }),
     columnHelper.accessor('mdIcon', {
         header: () => <span className="material-symbols-outlined">helicopter</span>,
         cell: info => {
@@ -163,15 +172,6 @@ const columns = [
         header: "Title",
         cell: info => info.getValue()
     }),
-    columnHelper.accessor('discovered', {
-        header: "Discovered",
-        cell: info => {
-            const at = info.getValue();
-            const id = info.row.original.id;
-            return <DiscoveredCell at={at} id={id} onElementDiscover={info.table.options.meta?.onElementDiscover} />;
-            // return at ? <IsDiscovered at={at} /> : <IsntDiscovered />;
-        }
-    }),
     columnHelper.accessor('parentIds', {
         // accessorFn: (row) => row.parentIds,
         header: 'Parents',
@@ -184,9 +184,31 @@ const columns = [
 ]
 
 const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TElement[], elementById: ReturnType<typeof groupById>, onEdit?: TonElementEdit}) => {
-    // const [store] = useRootStore();
-    const [editingIds, setEditingIds] = useState<string[]>(['air', 'jump']);
-    const [deletingIds, setDeletingIds] = useState<string[]>(['gravity', 'river']);
+    const [editingIds, setEditingIds] = useState<string[]>([]);
+    const [editingIdsFadeout, setEditingIdsFadeout] = useState<string[]>([]);
+    const editingIdsFadeoutReal = useRef<string[]>([]); // боремся с замыканием
+    const [deletingIds, setDeletingIds] = useState<string[]>([]);
+    const toggleElementEditing = (show: boolean, id: string) => {
+        // показыем панельку редактирования элемента (показ/скрытие с анимациями, но если панелька не нужна - не рендерим ElementEditForm)
+        if (show) {
+            editingIdsFadeoutReal.current = editingIdsFadeoutReal.current.filter(_id => _id !== id);
+            setEditingIdsFadeout(editingIdsFadeoutReal.current);
+            setEditingIds([...editingIds, id]);
+        } else {
+            editingIdsFadeoutReal.current.push(id);
+            setEditingIdsFadeout(editingIdsFadeoutReal.current);
+            setEditingIds(editingIds.filter(_id => _id !== id));
+            setTimeout(()=>{
+                // через секунду после скрытия забываем о транзишне
+                if (!editingIdsFadeoutReal.current.includes(id)) {
+                    // в процессе скрытия пользователь передумал, и решил вернуть панельку на место
+                    return;
+                }
+                editingIdsFadeoutReal.current = editingIdsFadeoutReal.current.filter(_id => _id !== id);
+                setEditingIdsFadeout(editingIdsFadeoutReal.current); // запускаем перерендер без ElementEditForm
+            }, 1_000);
+        }
+    };
     const table = useReactTable({
       data: elements,
       columns,
@@ -201,21 +223,18 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
         toggleElementDeleting: (show: boolean, id: string) => {
             setDeletingIds( show ? [...deletingIds, id] : deletingIds.filter(_id => _id !== id) );
         },
-        toggleElementEditing: (show: boolean, id: string) => {
-            setEditingIds( show ? [...editingIds, id] : editingIds.filter(_id => _id !== id) );
-        },
+        toggleElementEditing,
         elementsEditingIds: editingIds,
         elementsDeletingIds: deletingIds,
         elementById,
       }
     });
     return <>
-        <div className="table-with-elements table table-striped">
-            asd
-            <table>
+        <div className="table-with-elements">
+            <table className="table">
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
+                        <tr key={headerGroup.id} className="table-primary">
                         {headerGroup.headers.map(header => (
                             <th key={header.id} className={`thead-${header.id}`}>
                             {header.isPlaceholder
@@ -230,13 +249,14 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map(row => (
+                    {table.getRowModel().rows.map((row, i) => (
                         <React.Fragment key={row.id}>
                             <tr 
                                 key={row.id} 
                                 className={`
                                     ${editingIds.includes(row.original.id) ? "tr-in-editing" : ""}
-                                    ${deletingIds.includes(row.original.id) ? "tr-in-deleting" : ""}
+                                    ${deletingIds.includes(row.original.id) ? "tr-in-deleting table-danger" : ""}
+                                    ${i%2 ? "tr-even" : ""}
                                 `}
                             >
                                 {row.getVisibleCells().map(cell => (
@@ -246,19 +266,24 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                                 ))}
                             </tr>
                             {
-                                editingIds.includes(row.original.id)
+                                editingIds.includes(row.original.id) || editingIdsFadeout.includes(row.original.id)
                                     ? 
-                                        <tr key={'edit,'+row.original.id} className="editing-tr">
+                                        <tr 
+                                            key={'edit,'+row.original.id} 
+                                            className={`
+                                                editing-tr 
+                                                ${i%2 ? "tr-even" : ""}
+                                                ${editingIdsFadeout.includes(row.original.id) ? 'editing-tr-fadeout' : ''}
+                                            `}
+                                        >
                                             <td colSpan={6} className="editing-td">
-                                                <div className="editing-container">
-                                                    <ElementEditForm
-                                                        id={row.original.id}
-                                                        mdIcon={row.original.mdIcon}
-                                                        title={row.original.title}
-                                                        parentIds={row.original.parentIds}
-                                                        otherElements={elementById}
-                                                    />
-                                                </div>
+                                                <ElementEditForm
+                                                    id={row.original.id}
+                                                    mdIcon={row.original.mdIcon}
+                                                    title={row.original.title}
+                                                    parentIds={row.original.parentIds}
+                                                    otherElements={elementById}
+                                                />
                                             </td>
                                         </tr>
                                     : null
