@@ -31,15 +31,14 @@ type TOtherElement = Pick<TElement, "id" | "mdIcon" | "title">;
 type TOtherElements = { otherElements: Record<string, TOtherElement> };
 
 type TDrawerClb = {
-    // onCanSave: (isCanSave: boolean) => void;
     onSubmit: () => void;
     onCancel: () => void;
 }
 
 type TFormClb = {
-    // onCanSave: (id: string, isCanSave: boolean) => void;
     onFieldChange: (values: TEditableElement) => void;
     onCancel: (id: string) => void;
+    onSave: (id: string, values: TEditableElement) => void;
 }
 
 type TElementEditFormDrawerProps = TEditableElement & TOtherElements & {form: MobxReactForm} & TDrawerClb;
@@ -65,13 +64,12 @@ const useInputAttributes = (id: string, er?: string|null, className?: string) =>
     };
 }
 
-const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElements, form, /*onCanSave,*/ onSubmit, onCancel}: TElementEditFormDrawerProps) => {
+const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElements, form, onSubmit, onCancel}: TElementEditFormDrawerProps) => {
     const htmlIdForId = useId();
     const htmlIdForTitle = useId();
     const htmlIdForMdIcon = useId();
     const htmlIdForMdIconHint = useId();
     const htmlIdForMdIconPreview = useId();
-    const canSave = useMemo(() => form.isDefault || !form.isValid, [form.isDefault, form.isValid]);
     const iconPreviewRef = useRef<HTMLSpanElement>(null);
     // TODO: заменить "in" на "", "not" на ""
     const [notMounted, setNotMounted] = useState<boolean>(true);
@@ -103,9 +101,6 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
             field.resetValidation();
         }
     }, [incorrectIcon]);
-    // useEffect(()=>{
-    //     onCanSave(form.isDefault || !form.isValid);
-    // }, [form.isDefault, form.isValid]);
     const formatOptionLabel = (data: TOption) => {
         return <ElementEditParentOption data={data} otherElements={otherElements} />
     };
@@ -252,7 +247,7 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                             type="submit" 
                             onClick={onSubmit} 
                             className="btn btn-primary"
-                            disabled={canSave}
+                            disabled={form.isDefault || !form.isValid}
                         >Save</button>
                         <button 
                             type="reset" 
@@ -271,7 +266,7 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
     </>
 });
 
-const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, onFieldChange, /*onCanSave,*/ onCancel}: TElementEditFormProps) => {
+const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, onFieldChange, onCancel, onSave}: TElementEditFormProps) => {
     const fields = [
         {
             name: 'id',
@@ -323,7 +318,9 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, 
     };
     const form = new MobxReactForm(options, { plugins, hooks });
     const onSubmit = () => {
-        console.log(form);
+        const values = form.values();
+        values.parentId = unconcatIds(values.parentIdsJoined);
+        onSave(id, values);
     };
     const myFieldChange = async () => {
         const values = form.values();
@@ -344,7 +341,6 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, 
         parentIds={parentIds} 
         otherElements={otherElements} 
         form={form} 
-        // onCanSave={(isCanSave)=>onCanSave(id, isCanSave)}
         onSubmit={onSubmit}
         onCancel={()=>onCancel(id)}
     />

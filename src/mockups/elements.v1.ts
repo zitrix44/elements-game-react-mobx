@@ -56,7 +56,7 @@ communication 	Communication	humans, humans,speech	communication
 miscommunication	Miscommunication	humans, humans,speech	chat_error				
 home	Home	communication, miscommunication	bungalow				bungalow, other_houses
 city	City	time, home	location_city				
-stingray	Stingray	microbes, gravity	unpublished				
+stingray	Stingray	microbes, gravity	hide_source				
 birds	Birds	air, microbes	raven 				
 park	Park	city, grass	attractions				
 fire_truck 	Fire truck	fire,fire_extinguisher , humans	fire_truck 				

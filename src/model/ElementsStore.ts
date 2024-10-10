@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { formatId, parseCSV, findLogicalErrorsInElements, TError, type Tadd, type Tcsv, concatIds, sortIds } from "./ElementsStore.utils";
-import Element from "./Element";
+import Element, { TElement } from "./Element";
 import { envNumber } from "../utils";
 
 type TaddOptions = {
@@ -115,5 +115,17 @@ export default class ElementsStore {
         const er = `ElementsStore.parseCSV: logical errors in CSV's content (see console for details)`;
         console.info({er, errors, elements});
         throw new Error(er); 
+    }
+
+    update(id: string, data: Partial<TElement>) {
+        if (!(id in this.byId)) {
+            throw new Error(`Unknown id "${id}"`);
+        }
+        data.parentIds?.forEach(v => {
+            if (!(v in this.byId)) throw new Error(`Unknown parent id "${v}" (updating ${id})`);
+        });
+        const element = this.byId[id];
+        element.title = data.title || element.title;
+        element.mdIcon = data.mdIcon || element.mdIcon;
     }
 }

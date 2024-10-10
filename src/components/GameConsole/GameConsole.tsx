@@ -33,7 +33,12 @@ const GameConsole = observer(() => {
             alert(id);
         },
         onElementUpdate: (id: string, data: Partial<TElement>): boolean => {
-            alert(id);
+            try {
+                store.elementsStore.update(id, data);
+            } catch(er) {
+                toastError((er as Error).message);
+                return false;
+            }
             return true;
         },
     };
