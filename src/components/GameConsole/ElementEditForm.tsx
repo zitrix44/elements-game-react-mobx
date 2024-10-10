@@ -1,52 +1,38 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import MobxReactForm from 'mobx-react-form';
 import Select from 'react-select';
 import { TElement } from "../../model/Element";
 
-import svk from 'mobx-react-form/lib/validators/SVK';
-import ajv from 'ajv';
-
 import './ElementEditForm.css';
 
-const $schema = {
-    type: 'object',
-    properties: {
-        title: { type: 'string', minLength: 1, maxLength: 30},
-        mdIcon: { type: 'string' }
-    }
-};
+import dvr from "mobx-react-form/lib/validators/DVR";
+import validatorjs from "validatorjs";
 
+import zod from 'mobx-react-form/lib/validators/ZOD';
+import z from 'zod';
 
-// import zod from 'mobx-react-form/lib/validators/ZOD';
-// import z from 'zod';
-// const $schema = z.object({
-//     title: z.string().min(1).max(30),
-//     mdIcon: z.string().min(1),
-// })
+const ICON_PREVIEW_SIZE = 24;
 
-const plugins = {
-    svk: svk({
-        package: ajv,
-        schema: $schema,
-        options: {}
-    }),
-    // dvr: dvr({ package: validatorjs }),
-};
+const $schema = z.object({
+    title: z.string().min(1).max(30),
+    mdIcon: z.string().min(1),
+})
+
+// const plugins = {
+//     svk: svk({
+//         package: ajv,
+//         schema: $schema,
+//         options: {}
+//     }),
+//     // dvr: dvr({ package: validatorjs }),
+// };
 
 // const fields = {
 //     title: {
 //         placeholder: 'asd'
 //     }
 // }
-// const fields = [
-//     {
-//         name: 'title',
-//         label: 'Email',
-//         placeholder: 'Insert Email',
-//         // rules: 'required|string|between:1,30',
-//     },
-// ];
 
 const hooks = {
     onSuccess(_form: any) {
@@ -98,7 +84,11 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
     const htmlIdForTitle = useId();
     const htmlIdForMdIcon = useId();
     const htmlIdForMdIconHint = useId();
+    const htmlIdForMdIconPreview = useId();
+    const iconPreviewRef = useRef<HTMLSpanElement>(null);
+    const [incorrectIcon, setIncorrectIcon] = useState<boolean>(true);
     const [notMounted, setNotMounted] = useState<boolean>(true);
+    const isIncorrectIcon = (): boolean => Number(iconPreviewRef.current?.clientWidth) > ICON_PREVIEW_SIZE * 1.5;
     useEffect(()=>{
         const timeoutId = setTimeout(()=>{
             setNotMounted(false);
@@ -107,6 +97,17 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
             clearTimeout(timeoutId);
         };
     }, []);
+    useEffect(()=>{
+        setIncorrectIcon(isIncorrectIcon());
+    }, [form.$('mdIcon').value]);
+    useEffect(()=>{
+        const field = form.$('mdIcon');
+        if (isIncorrectIcon()) {
+            field.invalidate(`No corresponding icon in font`);
+        } else {
+            field.resetValidation();
+        }
+    }, [incorrectIcon])
     const formatOptionLabel = (data: TOption) => {
         return <ElementEditParentOption data={data} otherElements={otherElements} />
     };
@@ -117,7 +118,7 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
     const errors = form.errors();
     console.log(errors.mdIcon)
     return <>
-        <div className={`editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
+        <div className={`element-edit-form editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
             <div className="mt-4 mb-5">
                 <div className="row my-3 mx-1">
                     <div className="col-sm-1 col-form-label pe-0 text-end">
@@ -149,7 +150,22 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                             name="mdIcon" 
                             {...form.$('mdIcon').bind()}
                             {...useInputAttributes(htmlIdForMdIcon, errors.mdIcon)}
-                            // aria-describedby={htmlIdForMdIconHint} 
+                            aria-describedby={errors.mdIcon ? 'error-' + htmlIdForMdIcon : htmlIdForMdIconHint} 
+                            onBlur={()=>{
+                                const check = async() => {
+                                    const field = await form.$('mdIcon').validate();
+                                    const er = field.errorSync || field.errorAsync;
+                                    if (er) {
+                                        field.showErrors();
+                                        return;
+                                    } else {
+                                        if (isIncorrectIcon()) {
+                                            field.invalidate(`No corresponding icon in font`);
+                                        }
+                                    }
+                                };
+                                check();
+                            }}
                         />
                         <div id={htmlIdForMdIconHint} className="form-text">
                             At <a href={`https://fonts.google.com/icons?selected=Material+Symbols+Outlined:${mdIcon}:FILL@1`} target='_blank'>Google's Icons</a> copy "Icon name" on icon's infopanel
@@ -158,12 +174,21 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                     </div>
                     <div className="col-sm ps-0 col-form-label d-flex align-items-center align-self-start" style={{overflow:"hidden"}}>
                         <span className="pe-2">
-                            Preview
+                            <span 
+                                id={htmlIdForMdIconPreview}
+                                className={`preview-icon-label ${form.$('mdIcon').value.length ? '' : 'no-icon-name'}`}
+                            >
+                                Preview
+                            </span>
                         </span>
-                        <span className="material-symbols-outlined">{form.$('mdIcon').value}</span>
+                        <span 
+                            className="material-symbols-outlined" 
+                            ref={iconPreviewRef}
+                            style={{fontSize:ICON_PREVIEW_SIZE+'px', lineHeight:ICON_PREVIEW_SIZE+'px'}}
+                            aria-labelledby={htmlIdForMdIconPreview}
+                        >{form.$('mdIcon').value}</span>
                     </div>
                 </div>
-                {/* 
                 <div className="row my-3 mx-1">
                     <div className="col-sm-1 col-form-label pe-0 text-end">
                         <label htmlFor={htmlIdForMdIcon} className="">Parents</label>
@@ -182,7 +207,6 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                         />
                     </div>
                 </div>
-                */}
             </div>
         </div>
     </>
@@ -204,6 +228,29 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
             value: mdIcon,
         },
     ];
+    const plugins = {
+        zod: zod({
+          package: z,
+          schema: $schema,
+        //   extend: ({ validator, form }) => {
+        //     ... // access zod validator and form instances
+        //   },
+        })
+      };
+    // const fields = [
+    //     {
+    //         name: 'title',
+    //         label: 'Email',
+    //         placeholder: 'Insert Email',
+    //         rules: 'required|string|between:1,30',
+    //     },
+    //     {
+    //         name: 'mdIcon',
+    //         label: 'Email',
+    //         placeholder: 'Insert Email',
+    //         rules: 'required|string|between:1,30',
+    //     },
+    // ];
     const options = {
         fields,
         validateOnInit: true,
@@ -211,6 +258,13 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
         showErrorsOnInit: true,
     }
     const form = new MobxReactForm(options, { plugins, hooks });
+    // form.observe({
+    //     path: 'mdIcon',
+    //     key: 'value', // can be any field property
+    //     call: ({ form, field, change }: {form:any, field:any, change:any}) => {
+    //         console.log({ form, field, change });
+    //     },
+    // });
     return <ElementEditFormDrawer id={id} mdIcon={mdIcon} title={title} parentIds={parentIds} otherElements={otherElements} form={form} />
 });
 
