@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@tanstack/react-table": "^8.20.5",
+    "ajv": "^8.17.1",
     "mobx": "^6.13.2",
     "mobx-react-form": "^6.10.1",
     "mobx-react-lite": "^4.0.7",

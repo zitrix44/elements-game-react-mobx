@@ -4,22 +4,32 @@ import MobxReactForm from 'mobx-react-form';
 import Select from 'react-select';
 import { TElement } from "../../model/Element";
 
-import zod from 'mobx-react-form/lib/validators/ZOD';
-import z from 'zod';
+import svk from 'mobx-react-form/lib/validators/SVK';
+import ajv from 'ajv';
 
 import './ElementEditForm.css';
 
+const $schema = {
+    type: 'object',
+    properties: {
+        title: { type: 'string', minLength: 1, maxLength: 30},
+        mdIcon: { type: 'string' }
+    }
+};
 
 
-const $schema = z.object({
-    title: z.string().min(1).max(30),
-    mdIcon: z.string().min(1),
-})
+// import zod from 'mobx-react-form/lib/validators/ZOD';
+// import z from 'zod';
+// const $schema = z.object({
+//     title: z.string().min(1).max(30),
+//     mdIcon: z.string().min(1),
+// })
 
 const plugins = {
-    zod: zod({
-        package: z,
+    svk: svk({
+        package: ajv,
         schema: $schema,
+        options: {}
     }),
     // dvr: dvr({ package: validatorjs }),
 };
