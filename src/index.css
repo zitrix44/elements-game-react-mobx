@@ -3,3 +3,10 @@
 @import './z-index.css';
 @import './variables.css';
 /* TODO: закинуть CSS-файлы в CSS-папку */
+
+html {
+    [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+        cursor: auto;
+        /* reboot _reboot.scss */
+    }
+}
