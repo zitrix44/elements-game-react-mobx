@@ -8,4 +8,5 @@
     z-index: var(--z-index-console);
     overflow: auto;
     overscroll-behavior: contain;
+    /* TODO: transform: skewY(26deg) skewX(-10deg) scaleX(0.6); */
 }

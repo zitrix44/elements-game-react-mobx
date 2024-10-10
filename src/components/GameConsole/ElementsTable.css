@@ -116,11 +116,11 @@
                 top: 0px;
                 pointer-events: none;
             }
-            :first-child {
-                transform: translateX(-50px);
-            }
             :last-child {
                 transform: translateX(50px);
+            }
+            :first-child {
+                transform: translateX(-50px);
             }
         }
         &.deleting .actions-deleting-confirmation,
@@ -137,6 +137,9 @@
         }
         &.deleting .actions-default, &.editing .actions-default {
             transform: translateY(50px);
+        }
+        .do-save.not-can-save {
+            opacity: 0.5;
         }
         .do-delete {
             text-shadow: 1px 0px 0px red;
@@ -178,8 +181,9 @@
         /* max-height: fit-content; */ /* will broke the transition */
         max-height: 777px;
         overflow: hidden;
-        transition: max-height 0.9s ease-in, box-shadow 0.5s ease-in;
-        box-shadow: inset 0px 10px 8px -10px black, inset 0px -20px 16px -18px black;
+        transition: max-height 0.9s ease-in, box-shadow 0.4s ease-in;
+        /* box-shadow: inset 0px 10px 8px -10px black, inset 0px -20px 16px -18px black; */
+        box-shadow: inset 0px 10px 8px -10px #00000096, inset 0px -20px 16px -18px #00000091;
     }
     .editing-tr-fadeout .editing-container {
         transition: max-height 0.9s ease-in-out, box-shadow 0.9s ease-in;

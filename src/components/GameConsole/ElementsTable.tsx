@@ -11,7 +11,7 @@ import Element, { TElementBase, type TElement } from '../../model/Element';
 
 import './ElementsTable.css';
 import React, { useRef, useState } from "react";
-import ElementEditForm from "./ElementEditForm";
+import ElementEditForm, { TEditableElement } from "./ElementEditForm";
 
 export const groupById = (elements: TElement[]): Record<string, TElement> => {
     const ret: Record<string, TElement> = {};
@@ -35,6 +35,7 @@ declare module '@tanstack/react-table' {
         onElementDelete?: TonElementDelete,
         toggleElementEditing?: (show: boolean, id: string) => void,
         toggleElementDeleting?: (show: boolean, id: string) => void,
+        elementsEditingCanSave?: Record<string, boolean>,
         elementsEditingIds?: string[],
         elementsDeletingIds?: string[],
         elementById?: ReturnType<typeof groupById>,
@@ -94,10 +95,11 @@ const ParentsCell = observer(({parentIds, elementById}: {parentIds: string[], el
 });
 
 const ActionsEditing = observer(({info, onCancel}: {info: CellContext<TElement, null>, onCancel: ()=>void}) => {
+    // const canSave = info.table.options.meta?.elementsEditingCanSave?.[info.row.original.id] || false;
     return <>
         <div className="actions-block actions-editing-confirmation">
             <span className="material-symbols-outlined" title="Cancel" onClick={onCancel}>disabled_by_default</span>
-            <span className="do-save material-symbols-outlined" title="Save">check</span>
+            {/* <span className={`do-save material-symbols-outlined ${canSave ? 'can-save' : 'not-can-save'}`} title="Save">check</span> */}
         </div>
     </>
 });
@@ -187,6 +189,10 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
     const [editingIds, setEditingIds] = useState<string[]>([]);
     const [editingIdsFadeout, setEditingIdsFadeout] = useState<string[]>([]);
     const editingIdsFadeoutReal = useRef<string[]>([]); // боремся с замыканием
+    // const [editingData, setEditingData] = useState<Record<string, TEditableElement>>({});
+    const editingData = useRef<Record<string, TEditableElement>>({});
+    // const [editingCanSave, setEditingCanSave] = useState<Record<string, boolean>>({});
+    const editingCanSave = useRef<Record<string, boolean>>({});
     const [deletingIds, setDeletingIds] = useState<string[]>([]);
     const toggleElementEditing = (show: boolean, id: string) => {
         // показыем панельку редактирования элемента (показ/скрытие с анимациями, но если панелька не нужна - не рендерим ElementEditForm)
@@ -225,12 +231,38 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
         },
         toggleElementEditing,
         elementsEditingIds: editingIds,
+        elementsEditingCanSave: editingCanSave.current,
         elementsDeletingIds: deletingIds,
         elementById,
       }
     });
+    // const onEditingCanSave = (id: string, isCanSave: boolean) => {
+    //     editingCanSave.current[id] = isCanSave;
+        // setDeletingIds([Math.random()+''])
+        // setEditingCanSave((prev: Record<string, boolean>)=>{
+        //     return {
+        //         ...prev,
+        //         [id]: isCanSave
+        //     };
+        // })
+    // };
+    const onEditingFieldChange = (values: TEditableElement) => {
+        // if (!editingData.current) return; // ??
+        editingData.current[values.id] = values;
+        // console.log(editingData.current);
+        // setEditingData((prev: Record<string, TEditableElement>)=>{
+        //     return {
+        //         ...prev,
+        //         [values.id]: values
+        //     };
+        // });
+    }
+    const onEditingCancel = (id: string) => {
+        toggleElementEditing(false, id);
+    };
     return <>
         <div className="table-with-elements">
+            {/* <textarea value={JSON.stringify(editingData.current, null, 4)} readOnly></textarea> */}
             <table className="table">
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
@@ -276,13 +308,17 @@ const ElementsTable = observer(({elements, onEdit, elementById}: {elements: TEle
                                                 ${editingIdsFadeout.includes(row.original.id) ? 'editing-tr-fadeout' : ''}
                                             `}
                                         >
-                                            <td colSpan={6} className="editing-td">
+                                            <td key={'edit-td,'+row.original.id}  colSpan={6} className="editing-td">
                                                 <ElementEditForm
-                                                    id={row.original.id}
-                                                    mdIcon={row.original.mdIcon}
-                                                    title={row.original.title}
-                                                    parentIds={row.original.parentIds}
+                                                    key={'edit-form,'+row.original.id} 
+                                                    id={editingData.current[row.original.id]?.id || row.original.id}
+                                                    mdIcon={editingData.current[row.original.id]?.mdIcon || row.original.mdIcon}
+                                                    title={editingData.current[row.original.id]?.title || row.original.title}
+                                                    parentIds={editingData.current[row.original.id]?.parentIds || row.original.parentIds}
                                                     otherElements={elementById}
+                                                    // onCanSave={onEditingCanSave}
+                                                    onFieldChange={onEditingFieldChange}
+                                                    onCancel={onEditingCancel}
                                                 />
                                             </td>
                                         </tr>

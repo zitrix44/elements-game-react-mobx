@@ -1,51 +1,24 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import MobxReactForm from 'mobx-react-form';
-import Select from 'react-select';
+import Select, { ActionMeta, MultiValue, Options } from 'react-select';
+import { concatIds, unconcatIds } from "../../model/ElementsStore.utils";
 import { TElement } from "../../model/Element";
 
 import './ElementEditForm.css';
-
-import dvr from "mobx-react-form/lib/validators/DVR";
-import validatorjs from "validatorjs";
 
 import zod from 'mobx-react-form/lib/validators/ZOD';
 import z from 'zod';
 
 const ICON_PREVIEW_SIZE = 24;
 
-const $schema = z.object({
+const FORM_SCHEME = z.object({
+    id: z.string(),
     title: z.string().min(1).max(30),
     mdIcon: z.string().min(1),
-})
-
-// const plugins = {
-//     svk: svk({
-//         package: ajv,
-//         schema: $schema,
-//         options: {}
-//     }),
-//     // dvr: dvr({ package: validatorjs }),
-// };
-
-// const fields = {
-//     title: {
-//         placeholder: 'asd'
-//     }
-// }
-
-const hooks = {
-    onSuccess(_form: any) {
-        alert('Form is valid! Send the request here.');
-        // get field values
-        // console.log('Form Values!', form.values());
-    },
-    onError(_form: any) {
-        alert('Form has errors!');
-        // get all form errors
-        // console.log('All form errors', form.errors());
-    }
-};
+    parentIdsJoined: z.string().optional(),
+    // NOTE: однобуквенные иконки допускаются, чтобы можно было использовать буквы и эмодзи
+});
 
 // type TOption = string; // :(
 type TOption = {
@@ -53,10 +26,25 @@ type TOption = {
     label: string;
 };
 
-type TMyElement = Pick<TElement, "id" | "mdIcon" | "title" | "parentIds">;
+export type TEditableElement = Pick<TElement, "id" | "mdIcon" | "title" | "parentIds">;
 type TOtherElement = Pick<TElement, "id" | "mdIcon" | "title">;
 type TOtherElements = { otherElements: Record<string, TOtherElement> };
-type TElementEditFormProps = TMyElement & TOtherElements;
+
+type TDrawerClb = {
+    // onCanSave: (isCanSave: boolean) => void;
+    onSubmit: () => void;
+    onCancel: () => void;
+}
+
+type TFormClb = {
+    // onCanSave: (id: string, isCanSave: boolean) => void;
+    onFieldChange: (values: TEditableElement) => void;
+    onCancel: (id: string) => void;
+}
+
+type TElementEditFormDrawerProps = TEditableElement & TOtherElements & {form: MobxReactForm} & TDrawerClb;
+
+type TElementEditFormProps = TEditableElement & TOtherElements & TFormClb;
 
 const ElementEditParentOption = observer(({data, otherElements}: {data: TOption } & TOtherElements) => {
     return <div className="parent-element-option">
@@ -70,8 +58,6 @@ const FormError = observer(({msg, htmlFor}:{ msg?: string | null, htmlFor?: stri
     return <label id={`error-${htmlFor}`} htmlFor={htmlFor} className="form-text text-danger">{msg}</label>;
 });
 
-// : {id:string, className:string, aria-describedby?: string}
-
 const useInputAttributes = (id: string, er?: string|null, className?: string) => {
     return {
         className: `form-control ${er ? 'is-invalid' : ''} ${className || ''}`,
@@ -79,16 +65,25 @@ const useInputAttributes = (id: string, er?: string|null, className?: string) =>
     };
 }
 
-const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElements, form}: TElementEditFormProps & {form: MobxReactForm}) => {
+const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElements, form, /*onCanSave,*/ onSubmit, onCancel}: TElementEditFormDrawerProps) => {
     const htmlIdForId = useId();
     const htmlIdForTitle = useId();
     const htmlIdForMdIcon = useId();
     const htmlIdForMdIconHint = useId();
     const htmlIdForMdIconPreview = useId();
+    const canSave = useMemo(() => form.isDefault || !form.isValid, [form.isDefault, form.isValid]);
     const iconPreviewRef = useRef<HTMLSpanElement>(null);
-    const [incorrectIcon, setIncorrectIcon] = useState<boolean>(true);
+    // TODO: заменить "in" на "", "not" на ""
     const [notMounted, setNotMounted] = useState<boolean>(true);
-    const isIncorrectIcon = (): boolean => Number(iconPreviewRef.current?.clientWidth) > ICON_PREVIEW_SIZE * 1.5;
+    const [incorrectIcon, setIncorrectIcon] = useState<boolean>(true);
+    const isIncorrectIcon = (): boolean => {
+        // иконка рендерится квадратной, ICON_PREVIEW_SIZE в стилях присутствует
+        // если превьюшка шире ICON_PREVIEW_SIZE - браузер покаызвает текст вместо иконки
+        // *1.5 чтобы точно избежать каких-нибудь браузерных игр со сглаживанием (гугловских иконок)
+        // *1.5 потому что "Щ" занимает 24.22 пикселя, "🎨" 32.95px, "🩱" 21.17px
+        // NOTE: (ачивка) валидируем пользовательский ввод браузерным рендером
+        return Number(iconPreviewRef.current?.clientWidth) > ICON_PREVIEW_SIZE * 1.5; 
+    }
     useEffect(()=>{
         const timeoutId = setTimeout(()=>{
             setNotMounted(false);
@@ -107,16 +102,28 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
         } else {
             field.resetValidation();
         }
-    }, [incorrectIcon])
+    }, [incorrectIcon]);
+    // useEffect(()=>{
+    //     onCanSave(form.isDefault || !form.isValid);
+    // }, [form.isDefault, form.isValid]);
     const formatOptionLabel = (data: TOption) => {
         return <ElementEditParentOption data={data} otherElements={otherElements} />
     };
     const options: TOption[] = Object.values(otherElements)
         .filter(v => v.id !== id)
         .map(v => ({ value: v.id, label: v.title }));
-    const selectedOptions = parentIds.map(id => ({value: id, label: otherElements[id].title}));
+    const selectedOptions = unconcatIds((form.$('parentIdsJoined').value+''))
+        .map(id => ({value: id, label: otherElements[id].title}));
+    const toSelect = {};
+    if (selectedOptions.length >= 3) {
+        // больше трех элементов не выбираем
+        //@ts-ignore
+        toSelect.menuIsOpen = false;
+    }
     const errors = form.errors();
-    console.log(errors.mdIcon)
+    const onReset = () => {
+        form.onReset();
+    };
     return <>
         <div className={`element-edit-form editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
             <div className="mt-4 mb-5">
@@ -137,7 +144,14 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                         <label htmlFor={htmlIdForId} className="">Id</label>
                     </div>
                     <div className="col-sm-3">
-                        <input type="text" name="id" className="form-control" id={htmlIdForId} value={id} disabled />
+                        <input 
+                            type="text" 
+                            name="id" 
+                            {...form.$('id').bind()}
+                            {...useInputAttributes(htmlIdForId, errors.id)}
+                            disabled 
+                        />
+                        <FormError msg={errors.id} htmlFor={htmlIdForId} />
                     </div>
                 </div>
                 <div className="row my-3 mx-1" style={{flexWrap:"nowrap"}}>
@@ -204,7 +218,52 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                             openMenuOnFocus
                             menuPosition="fixed" // боремся с overflow: hidden
                             formatOptionLabel={formatOptionLabel} 
+                            hideSelectedOptions={false}
+                            {...toSelect}
+                            isOptionSelected={(_option: { value: string; label: string; }, _selectValue: Options<{ value: string; label: string; }>)=>{
+                                // поведение по умолчанию:
+                                // имеем: ['jump', 'jump'], добавляем третий 'jump', получаем: [] (ожидаем ['jump', 'jump', 'jump'])
+                                // имеем: ['air', 'microbes'], добавляем 'air', получаем: ['microbes'] (ожидаем ['air', 'air', 'microbes'])
+                                // снятие состояния выделения приводит к ожидаемому поведению при дублировании выбранных option'ов
+                                // выбранный option и выделенный option - вещи разные
+                                return false;
+                            }}
+                            onChange={(newValue: MultiValue<TOption>, actionMeta: ActionMeta<TOption>) => {
+                                let expectedNewValue = newValue;
+                                if (actionMeta.action==="remove-value") {
+                                    // поведение по умолчанию:
+                                    // имеем: ['jump', 'jump'], удаляем 'jump', получаем [] (ожидаем 'jump')
+                                    // будем очищать только один элемент из selectedOptions
+                                    const id = actionMeta.removedValue.value;
+                                    const _i = selectedOptions.findIndex(v => v.value === id);
+                                    // Property 'splice' does not exist on type 'MultiValue<TOption>'
+                                    expectedNewValue = selectedOptions.filter((_v,i)=> i !== _i);
+                                }
+                                // if (actionMeta.action==="select-option") .option
+                                form.$('parentIdsJoined').set(concatIds(expectedNewValue.map(v => v.value)));
+                            }}
                         />
+                        <input {...form.$('parentIdsJoined').bind()} type="hidden" />
+                    </div>
+                </div>
+                <div className="row my-3 mx-1">
+                    <div className="col offset-1 hstack gap-3">
+                        <button 
+                            type="submit" 
+                            onClick={onSubmit} 
+                            className="btn btn-primary"
+                            disabled={canSave}
+                        >Save</button>
+                        <button 
+                            type="reset" 
+                            onClick={onReset} 
+                            className="btn btn-outline-primary"
+                            disabled={form.isDefault}
+                        >Reset</button>
+                        <button 
+                            className="btn btn-outline-primary" 
+                            onClick={onCancel}
+                        >Cancel</button>
                     </div>
                 </div>
             </div>
@@ -212,9 +271,13 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
     </>
 });
 
-
-const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}: TElementEditFormProps) => {
+const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, onFieldChange, /*onCanSave,*/ onCancel}: TElementEditFormProps) => {
     const fields = [
+        {
+            name: 'id',
+            default: id,
+            value: id,
+        },
         {
             name: 'title',
             placeholder: 'e.g. Air, Fire extinguisher',
@@ -227,45 +290,64 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements}:
             default: mdIcon,
             value: mdIcon,
         },
+        {
+            name: 'parentIdsJoined',
+            default: concatIds(parentIds),
+            value: concatIds(parentIds),
+            // output: (v: string) => unconcatIds(v),
+        }
     ];
     const plugins = {
         zod: zod({
-          package: z,
-          schema: $schema,
-        //   extend: ({ validator, form }) => {
-        //     ... // access zod validator and form instances
-        //   },
+            package: z,
+            schema: FORM_SCHEME,
         })
-      };
-    // const fields = [
-    //     {
-    //         name: 'title',
-    //         label: 'Email',
-    //         placeholder: 'Insert Email',
-    //         rules: 'required|string|between:1,30',
-    //     },
-    //     {
-    //         name: 'mdIcon',
-    //         label: 'Email',
-    //         placeholder: 'Insert Email',
-    //         rules: 'required|string|between:1,30',
-    //     },
-    // ];
+    };
     const options = {
         fields,
         validateOnInit: true,
         validateOnChange: true,
         showErrorsOnInit: true,
     }
+    const hooks = {
+        onSuccess(_form: any) {
+            alert('Form is valid! Send the request here.');
+            // get field values
+            // console.log('Form Values!', form.values());
+        },
+        onError(_form: any) {
+            alert('Form has errors!');
+            // get all form errors
+            // console.log('All form errors', form.errors());
+        }
+    };
     const form = new MobxReactForm(options, { plugins, hooks });
-    // form.observe({
-    //     path: 'mdIcon',
-    //     key: 'value', // can be any field property
-    //     call: ({ form, field, change }: {form:any, field:any, change:any}) => {
-    //         console.log({ form, field, change });
-    //     },
-    // });
-    return <ElementEditFormDrawer id={id} mdIcon={mdIcon} title={title} parentIds={parentIds} otherElements={otherElements} form={form} />
+    const onSubmit = () => {
+        console.log(form);
+    };
+    const myFieldChange = async () => {
+        const values = form.values();
+        values.parentId = unconcatIds(values.parentIdsJoined);
+        onFieldChange(values);
+    };
+    fields.forEach(({name}: {name: string}) => {
+        form.observe({
+            path: name,
+            key: "value",
+            call: myFieldChange
+        });
+    });
+    return <ElementEditFormDrawer 
+        id={id} 
+        mdIcon={mdIcon} 
+        title={title} 
+        parentIds={parentIds} 
+        otherElements={otherElements} 
+        form={form} 
+        // onCanSave={(isCanSave)=>onCanSave(id, isCanSave)}
+        onSubmit={onSubmit}
+        onCancel={()=>onCancel(id)}
+    />
 });
 
 export default ElementEditForm;

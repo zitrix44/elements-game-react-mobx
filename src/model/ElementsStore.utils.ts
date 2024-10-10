@@ -6,6 +6,7 @@ export const formatId = (id: string): string => (id || "").trim().toLowerCase();
 type TidOrHole = string | undefined | null;
 export const sortIds = (array: TidOrHole[]): string[] => array.filter(v => typeof v === 'string').filter(v => v.length).sort();
 export const concatIds = (array: TidOrHole[]): string => sortIds(array).join(" ");
+export const unconcatIds = (joinedIds: string): string[] => sortIds(joinedIds.split(" "));
 
 export type Tadd = Partial<TElement> & TElementBase;
 export type Tcsv = TElementBase & TElementVisual & Pick<TElementRuntime, "discovered" | "level">;

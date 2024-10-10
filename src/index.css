@@ -5,8 +5,11 @@
 /* TODO: закинуть CSS-файлы в CSS-папку */
 
 html {
+    /* reboot _reboot.scss */
     [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
         cursor: auto;
-        /* reboot _reboot.scss */
+    }
+    textarea {
+        resize: revert;
     }
 }
