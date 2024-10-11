@@ -9,6 +9,8 @@ type TaddOptions = {
     skipReorder?: boolean;
 };
 
+export type TElementUpdate = Pick<TElement, "id" | "title" | "mdIcon" | "parentIds">;
+
 export default class ElementsStore {
     array: Element[] = [];
     byId: Record<string, Element> = {};

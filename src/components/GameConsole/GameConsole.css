@@ -1,12 +1,53 @@
 .console {
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 800px;
-    background: white;
-    z-index: var(--z-index-console);
-    overflow: auto;
-    overscroll-behavior: contain;
-    /* TODO: transform: skewY(26deg) skewX(-10deg) scaleX(0.6); */
+    & {
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        height: 100vh;
+        width: 800px;
+        background: white;
+        z-index: var(--z-index-console);
+        overflow: auto;
+        overscroll-behavior: contain;
+        box-shadow: 20px 20px 80px black, -7px 0px 5px -5px rgba(0,0,0,0.25);
+        transition: transform 1s ease-out, width 1s ease-out, right 1s ease-out, height 0.3s ease-out, top 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-in-out;
+    }
+    &.console-transparent {
+        & {
+            opacity: 0.5;
+        }
+        &:hover, &:focus-within {
+            opacity: 0.9;
+        }
+    }
+    &.console-compact {
+        height: 150vh;
+        top: -20vh;
+        right: -50px;
+        transform: scaleX(0.6) skewY(15deg) skewX(-15deg);
+        padding-top: 20vh;
+        padding-bottom: 26vh;
+    }
+    &.console-not-at-right {
+        right: 200px;
+    }
+    &.console-just-mounted {
+        right: -900px;
+    }
+    .panel-controls {
+        .material-symbols-outlined {
+            display: block;
+        }
+        .close-console-panel {
+            & {
+                opacity: 0.8;
+            }
+            &:hover, &:focus {
+                opacity: 1;
+            }
+            &:active {
+                border-color: transparent;
+            }
+        }
+    }
 }

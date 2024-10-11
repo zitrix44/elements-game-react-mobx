@@ -14,6 +14,9 @@
     tbody td, tbody th {
         vertical-align: top;
     }
+    .thead-discovered {
+        width: 100px;
+    }
     .thead-mdIcon {
         &, &:first-child {
             text-align: center;
@@ -24,6 +27,12 @@
             position: relative;
             top: 2px;
         }
+    }
+    .thead-id {
+        width: 120px;
+    }
+    .thead-parentIds {
+        width: 160px;
     }
     .column-mdIcon {
         & {
@@ -38,6 +47,7 @@
         }
     }
     .column-discovered {
+        text-align: right;
         .material-symbols-outlined {
             font-size: 1em;
             margin-right: 0.3em;
@@ -72,7 +82,7 @@
         }
         .parent-is-discovered, .parent-isnt-discovered {
             font-size: 1em;
-            opacity: 0.5;
+            opacity: 0.3;
             vertical-align: -2px;
         }
     }
@@ -107,7 +117,7 @@
             transform: translateY(0px);
         }
         .actions-default, .material-symbols-outlined {
-            transition: transform 0.3s ease-in;
+            transition: transform 0.3s ease-in, opacity 0.05s linear;
         }
         .actions-deleting-confirmation, .actions-editing-confirmation {
             & {
@@ -134,9 +144,27 @@
             :last-child {
                 transform: translateX(0px);
             }
+            .back-to-edit {
+                opacity: 0;
+                visibility: hidden;
+            }
         }
         &.deleting .actions-default, &.editing .actions-default {
             transform: translateY(50px);
+        }
+        &.editing-fadeout .actions-editing-confirmation {
+            :first-child {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            .back-to-edit {
+                opacity: 1;
+                visibility: visible;
+                margin-left: -42px;
+            }
+            :last-child {
+                transform: translateX(50px);
+            }
         }
         .do-save.not-can-save {
             opacity: 0.5;
@@ -159,6 +187,9 @@
     .tr-in-deleting td {
         background: var(--bs-table-bg);
     }
+    tr:target td {
+        animation: tr-target-td-highlight 1s linear 0s 1 forwards;
+    }
     .tr-in-deleting {
         .column-mdIcon, .column-id, .column-title {
             text-shadow: 1px 0px 0px #ffffff6b;
@@ -172,10 +203,6 @@
         }
         .column-title {
         }
-    }
-    .tr-in-editing {
-        /* filter: invert(100%); */
-        background: #e9eee1;
     }
     .editing-container {
         /* max-height: fit-content; */ /* will broke the transition */
@@ -199,5 +226,37 @@
         overflow:hidden;
         white-space:nowrap;
         vertical-align: bottom;
+    }
+    .parent-regular a .parent-title {
+        border-bottom: 1px dotted rgba(var(--bs-primary-rgb), 0.5);
+    }
+    .parent-regular a:hover .parent-title, 
+    .parent-regular a:focus .parent-title {
+        color: var(--bs-primary);
+        border-bottom: 1px dotted rgba(var(--bs-primary-rgb), 1);
+    }
+}
+
+@keyframes tr-target-td-highlight {
+    0% {
+        box-shadow: none;
+    }
+    10% {
+        box-shadow: inset 0px 0px 0px 60px rgba(255, 222, 0, 0);
+    }
+    20% {
+        box-shadow: inset 0px 0px 0px 60px rgba(255, 222, 0, 1);
+    }
+    50% {
+        box-shadow: inset 0px 0px 0px 60px rgba(255, 222, 0, 1);
+    }
+    90% {
+        box-shadow: inset 0px 0px 0px 60px rgba(255, 222, 0, 0.1);
+    }
+    99% {
+        box-shadow: none;
+    }
+    100% {
+        box-shadow: none;
     }
 }

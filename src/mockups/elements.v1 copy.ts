@@ -42,43 +42,43 @@ id	title	parentIds	mdIcon	customDrawerType	customDrawData	discovered	comment
 # - empty lines is allowed							
 # - empty line at start of the document/file is allowed							
 # - empty line at end of the document/file is allowed							
-water	Вода		water_drop 				
-fire	Огонь		local_fire_department 				
-fire_extinguisher 	Огнепушитель 	water, fire	fire_extinguisher 				
-air 	Воздух		air 				
-wave	Волна	air, time	earthquake				earthquake, equalizer 
-time	Время		hourglass_bottom				
-speech	Речь	air,wave	tooltip_2 				
-microbes	Микробы	time, water	bug_report 				
-grass	Трава	time, microbes	grass				
-humans	Люди	microbes, speech	wc				
-communication 	Понимание	humans, humans,speech	communication 				
-miscommunication	Недопонимание	humans, humans,speech	chat_error				
-home	Дом	communication, miscommunication	bungalow				bungalow, other_houses
-city	Город	time, home	location_city				
-stingray	Скат	microbes, gravity	hide_source				
-birds	Птицы	air, microbes	raven 				
-park	Парк	city, grass	attractions				
-fire_truck 	Пожарный грузовик	fire,fire_extinguisher , humans	fire_truck 				
-fire_hydrant 	Пожарный гидрант 	water, fire, humans	fire_hydrant 				
-car_accident	Автоавария	fire_truck , fire_hydrant 	car_crash 				
-gravity	Гравитация		keyboard_double_arrow_down 				
-river	Река	gravity, water	ssid_chart				
-jump	Прыжок	gravity, gravity	unfold_more_double 				
+water	Water		water_drop 				
+fire	Fire		local_fire_department 				
+fire_extinguisher 	Fire extinguisher 	water, fire	fire_extinguisher 				
+air 	Air		air 				
+wave	Wave	air, time	earthquake				earthquake, equalizer 
+time	Time		hourglass_bottom				
+speech	Speech	air,wave	tooltip_2 				
+microbes	Microbes	time, water	bug_report 				
+grass	Grass	time, microbes	grass				
+humans	Humans	microbes, speech	wc				
+communication 	Communication	humans, humans,speech	communication 				
+miscommunication	Miscommunication	humans, humans,speech	chat_error				
+home	Home	communication, miscommunication	bungalow				bungalow, other_houses
+city	City	time, home	location_city				
+stingray	Stingray	microbes, gravity	hide_source				
+birds	Birds	air, microbes	raven 				
+park	Park	city, grass	attractions				
+fire_truck 	Fire truck	fire,fire_extinguisher , humans	fire_truck 				
+fire_hydrant 	Fire hydrant 	water, fire, humans	fire_hydrant 				
+car_accident	Car accident	fire_truck , fire_hydrant 	car_crash 				
+gravity	Gravity		keyboard_double_arrow_down 				
+river	River	gravity, water	ssid_chart				
+jump	Jump	gravity, gravity	unfold_more_double 				
 rocket_jump	Rocket jump	jump, fire	move_down				
-jump2	Двойной прыжок	jump, jump	sync 				
-eureka	Эврика	jump, jump, jump	sync_problem 				
-cyclone	Циклон	air,air	cyclone 				
-atmosphere	Атмосфера	air,air	heat				
-cloud	Облака	atmosphere, wave	filter_drama				
-rain	Дождь	cloud, gravity	rainy				
-summer_weather	Лётная погода	rain, time	cloud_off				
-rocket	Ракета	summer_weather, fire	rocket_launch				
-pool	Бассейн	humans, water	pool 				
-faucet	Кран	humans, water	faucet				
-sauna	Сауна	pool, fire	sauna				
-force_majeure	Форс-Мажор	cyclone, humans	flood				
-kayaking	Каякинг	river, humans	kayaking				
-sail	Парус	kayaking, air	sailing				
-globe	Глобус	sail, time	public				
+jump2	Double jump	jump, jump	sync 				
+eureka	Eureka	jump, jump, jump	sync_problem 				
+cyclone	Cyclone	air,air	cyclone 				
+atmosphere	Atmosphere	air,air	heat				
+cloud	Cloud	atmosphere, wave	filter_drama				
+rain	Rain	cloud, gravity	rainy				
+summer_weather	Summer weather	rain, time	cloud_off				
+rocket	Rocket	summer_weather, fire	rocket_launch				
+pool	Pool	humans, water	pool 				
+faucet	Faucet	humans, water	faucet				
+sauna	Sauna	pool, fire	sauna				
+force_majeure	Force majeure	cyclone, humans	flood				
+kayaking	Kayaking	river, humans	kayaking				
+sail	Sail	kayaking, air	sailing				
+globe	Globe	sail, time	public				
 `;

@@ -120,7 +120,7 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
         form.onReset();
     };
     return <>
-        <div className={`element-edit-form editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
+        <form className={`element-edit-form editing-container ${notMounted ? 'not-mounted' : 'mounted'}`}>
             <div className="mt-4 mb-5">
                 <div className="row my-3 mx-1">
                     <div className="col-sm-1 col-form-label pe-0 text-end">
@@ -257,12 +257,15 @@ const ElementEditFormDrawer = observer(({id, mdIcon, title, parentIds, otherElem
                         >Reset</button>
                         <button 
                             className="btn btn-outline-primary" 
-                            onClick={onCancel}
+                            onClick={(e)=>{
+                                e.preventDefault();
+                                onCancel();
+                            }}
                         >Cancel</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </>
 });
 
@@ -306,25 +309,25 @@ const ElementEditForm = observer(({id, mdIcon, title, parentIds, otherElements, 
     }
     const hooks = {
         onSuccess(_form: any) {
-            alert('Form is valid! Send the request here.');
-            // get field values
-            // console.log('Form Values!', form.values());
+            console.error('NOTE: мы сюда не приходим (enter проверял)');
         },
         onError(_form: any) {
-            alert('Form has errors!');
-            // get all form errors
-            // console.log('All form errors', form.errors());
+            console.error('NOTE: да, сюда тоже не приходим');
         }
     };
-    const form = new MobxReactForm(options, { plugins, hooks });
+    const [form, setForm] = useState<MobxReactForm>();
+    useEffect(()=>{
+        setForm(new MobxReactForm(options, { plugins, hooks }));
+    }, []);
+    if (!form) return null;
     const onSubmit = () => {
         const values = form.values();
-        values.parentId = unconcatIds(values.parentIdsJoined);
+        values.parentIds = unconcatIds(values.parentIdsJoined);
         onSave(id, values);
     };
     const myFieldChange = async () => {
         const values = form.values();
-        values.parentId = unconcatIds(values.parentIdsJoined);
+        values.parentIds = unconcatIds(values.parentIdsJoined);
         onFieldChange(values);
     };
     fields.forEach(({name}: {name: string}) => {

@@ -5,6 +5,7 @@ import ThemeStore from "./ThemeStore";
 import RootStoreUtils from "./RootStoreUtils";
 import CauldronStore from "./CauldronStore";
 import DiscoverStore from "./DiscoverStore";
+import ConsoleStore from "./ConsoleStore";
 
 export class RootStore {
     utils: RootStoreUtils;
@@ -13,6 +14,7 @@ export class RootStore {
     themeStore: ThemeStore;
     cauldronStore: CauldronStore;
     discoverStore: DiscoverStore;
+    consoleStore: ConsoleStore;
 
     constructor() {
         makeAutoObservable(this);
@@ -22,6 +24,7 @@ export class RootStore {
         this.themeStore = new ThemeStore();
         this.cauldronStore = new CauldronStore(this.elementsStore);
         this.discoverStore = new DiscoverStore(this.elementsStore, this.themeStore, this.cauldronStore);
+        this.consoleStore = new ConsoleStore(this);
     }
 
     startWithParsed() {

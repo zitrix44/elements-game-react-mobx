@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { formatId, Tcsv, TError } from "./ElementsStore.utils";
 import { RootStore } from "./RootStore";
 
+// TODO: ER_PREFIX такая себе затея, в toasts только помешает
 const ER_PREFIX = 'LaunchStore.start: ';
 
 export default class LaunchStore {
@@ -44,6 +45,7 @@ export default class LaunchStore {
             const er = _er as Error;
             this.elementsParseError = er;
             console.error(er);
+            // TODO: toastError уже в утилях
             this.#rootStore.utils.toastError(`${er.name}: ${er.message}`);
         } finally {
             this.elementsParsingDurationMS = parsedAt - startAt;
@@ -52,6 +54,7 @@ export default class LaunchStore {
     }
 
     toastError(msg: string) {
+        // TODO: toastError уже в утилях
         this.#rootStore.utils.toastError(msg.replace(ER_PREFIX, ''));
     }
 

@@ -47,7 +47,7 @@ const PageGame = observer(() => {
                     })}
                 </div>
             </div>
-            <ElementsList elements={toJS(elements)} />
+            {/* <ElementsList elements={toJS(elements)} /> */}
             {
                 store.discoverStore.discovered.length 
                     ?
@@ -58,7 +58,7 @@ const PageGame = observer(() => {
                         />
                     : null
             }
-            <GameConsole />
+            { store.consoleStore.active && <GameConsole />}
             <ToastContainer 
                 position="bottom-right"
                 theme="colored"
