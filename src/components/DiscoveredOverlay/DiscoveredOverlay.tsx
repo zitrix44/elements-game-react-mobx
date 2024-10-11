@@ -65,6 +65,7 @@ const BlottedCard = observer(({element}: {element:Element}) => {
             <Delayed delay={700}><div className="blot-3"><Blot /></div></Delayed>
             <Delayed delay={1200}><div className="blot-4"><Blot /></div></Delayed>
             <Delayed delay={1100}><div className="blot-5"><Blot /></div></Delayed>
+            <Delayed delay={2100}><div className="blot-6"><Blot /></div></Delayed>
             <span className="material-symbols-outlined">{element.mdIcon}</span>  
             <div className="blotted-card-text">
                 {element.title}

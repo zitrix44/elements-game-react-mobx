@@ -74,8 +74,9 @@
     .cauldron-icon-container {
         position: relative;
         animation: cauldron-icon-container 10s ease-in-out infinite;
-        width: var(--incauldron-icon-size);
-        height: var(--incauldron-icon-size);
+/* FIXME: size for emoji, e.g. if .mdIcon === "⌚", or 🎪, or Щ */
+        min-width: var(--incauldron-icon-size);
+        height: calc(var(--incauldron-icon-size) * 1.5);
         margin-top: 0px;
         box-sizing: content-box;
         border-bottom: 0px solid transparent;
@@ -105,21 +106,20 @@
         left: 0;
         top: 0;
         width: 100%;
-        height: 60%;
+        height: 40%;
         overflow: hidden;
         opacity: 1;
     }
     .cauldron-icon-over-the-sea {
         position: absolute;
         left: 0;
-        bottom: 0;
+        top: 0;
         width: 100%;
-        height: 40%;
+        height: 100%;
         overflow: hidden;
         opacity: 0.3;
     }
     .cauldron-icon-over-the-sea .material-symbols-outlined {
-        top: unset;
         bottom: 0px;
         text-shadow: 2px 2px 5px aqua;
     }
@@ -136,7 +136,7 @@
       /* top: -30px; */
     }
     &:hover .cauldron-icon-over-the-sea {
-      height: 20%;
+      /* height: 20%; */
       /* bottom: 30px; */
     }
   }

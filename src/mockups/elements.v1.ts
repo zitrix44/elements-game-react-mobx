@@ -42,7 +42,7 @@ id	title	parentIds	mdIcon	customDrawerType	customDrawData	discovered	comment
 # - empty lines is allowed							
 # - empty line at start of the document/file is allowed							
 # - empty line at end of the document/file is allowed							
-water	Вода		water_drop 				
+water	Вода		💧 				
 fire	Огонь		local_fire_department 				
 fire_extinguisher 	Огнепушитель 	water, fire	fire_extinguisher 				
 air 	Воздух		air 				

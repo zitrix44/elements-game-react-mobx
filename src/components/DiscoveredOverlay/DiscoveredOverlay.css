@@ -97,7 +97,7 @@
     .blotted-card {
         & {
             position: relative;
-            width: 350px;
+            width: 420px;
             height: 220px;
             margin-right: 10px;
         }
@@ -180,6 +180,13 @@
             top: 30px;
             rotate: 70deg;
             scale: 0.6;
+        }
+        .blot-6 {
+            position: absolute;
+            left: 280px;
+            top: 50px;
+            rotate: 70deg;
+            scale: 1;
         }
     }
     .blot-circle {

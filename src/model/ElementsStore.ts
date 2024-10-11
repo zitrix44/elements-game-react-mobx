@@ -14,7 +14,7 @@ export type TElementUpdate = Pick<TElement, "id" | "title" | "mdIcon" | "parentI
 export default class ElementsStore {
     array: Element[] = [];
     byId: Record<string, Element> = {};
-    mdIconById: Record<string, string> = {};
+    // mdIconById: Record<string, string> = {};
 
     static formatId = formatId;
     static sortIds = sortIds;
@@ -26,6 +26,13 @@ export default class ElementsStore {
 
     get undiscoveredElementsCount(): number {
         return this.array.filter(v => !v.discovered).length;
+    }
+
+    get mdIconById(): Record<string, string> {
+        return this.array.reduce((s, v) => {
+            s[v.id] = v.mdIcon;
+            return s;
+        }, {} as Record<string, string>);
     }
 
     hasId(id: string) {
