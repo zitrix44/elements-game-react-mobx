@@ -105,6 +105,10 @@
             top: -2px;
             cursor: default;
         }
+        .action-disabled:hover {
+            top: 0;
+            cursor: not-allowed;
+        }
     }
     .actions-container {
         &, .actions-block {
@@ -115,6 +119,10 @@
         }
         .actions-default {
             transform: translateY(0px);
+        }
+        .action-disabled:not(.action-quite-disabled) {
+            opacity: 0.2;
+            /* pointer-events: none; */ /* NOTE: сохраняем кликабельность для показа @title */
         }
         .actions-default, .material-symbols-outlined {
             transition: transform 0.3s ease-in, opacity 0.05s linear;
@@ -194,13 +202,12 @@
         .column-mdIcon, .column-id, .column-title {
             text-shadow: 1px 0px 0px #ffffff6b;
         }
-        .column-mdIcon {
+        /* .column-mdIcon {
             background: linear-gradient(70deg, var(--bs-table-bg) 20px, #ff797999 80%);
         }
         .column-id {
-            /* background: #ff797999; */
             background: linear-gradient(-70deg, var(--bs-table-bg) 30%, #ff797999 80%);
-        }
+        } */
         .column-title {
         }
     }
@@ -234,6 +241,12 @@
     .parent-regular a:focus .parent-title {
         color: var(--bs-primary);
         border-bottom: 1px dotted rgba(var(--bs-primary-rgb), 1);
+    }
+    .parent-regular a.no-target .parent-title,
+    .parent-regular a:hover.no-target .parent-title,
+    .parent-regular a:focus.no-target .parent-title {
+        color: inherit;
+        border-bottom-color: transparent;
     }
 }
 

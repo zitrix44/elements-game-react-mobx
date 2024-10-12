@@ -39,6 +39,16 @@ export default class ElementsStore {
        return id in this.byId; 
     }
 
+    getChildren(id: string): Element[] {
+        return this.array.filter(v => v.parentIds.includes(id));
+    }
+    getDescendant(id: string): Element[] {
+        return this.getChildren(id).flatMap(v => [v, ...this.getDescendant(v.id)]);
+    }
+    getDescendantOrSelf(id: string): Element[] {
+        return [this.byId[id], ...this.getDescendant(id)];
+    }
+
     addMany(data: Tadd[], options: TaddOptions = {}): Element[] {
         const options_ = { ...options, skipLevel: true, skipReorder: true };
         const elements = data.map(v => this.addOne(v, options_));
@@ -64,6 +74,12 @@ export default class ElementsStore {
         if (!options.skipReorder) {
             this.#reorder();
         }
+        // console.log('air', this.getDescendantOrSelf('air').map(v=>v.id))
+        // console.log('fire', this.getDescendantOrSelf('fire').map(v=>v.id))
+        // console.log('globe', this.getDescendantOrSelf('globe').map(v=>v.id))
+        // console.log('sail', this.getDescendantOrSelf('sail').map(v=>v.id))
+        // console.log('kayaking', this.getDescendantOrSelf('kayaking').map(v=>v.id))
+        // console.log('fire_truck', this.getDescendantOrSelf('fire_truck').map(v=>v.id))
         return elements;
     }
 

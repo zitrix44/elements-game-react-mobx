@@ -9,6 +9,7 @@ import { toastError, toastInfo, toastSuccess } from "../../utils/toasts";
 import './GameConsole.css';
 import { TElement } from "../../model/Element";
 import { ElementsTableContext, ElementsTableContextData } from "./ElementsTableContext";
+import useElementsTableContext, { useConsole } from "./ElementsTableContext";
 
 let cheatsCount = 0;
 
@@ -17,6 +18,19 @@ type TElementsTableContext = {
     allows: Tallows;
 };
 
+const ConsoleFooter = observer(() => {
+    const c = useConsole();
+    if (c.deletingMode === "multiple") {
+        return <>
+            <button className="btn btn-danger me-3" onClick={()=>c.delete()}>Delete all selected elements</button>
+            <button className="btn btn-outline-primary" onClick={()=>c.deleteCancel()}>Cancel</button>
+        </>;
+    }
+    return <>
+        <a href="#console-top" className="btn btn-primary btn-lg">To top</a>
+    </>;
+});
+
 const GameConsole = observer(() => {
     const [justMounted, setJustMounted] = useState<boolean>(true);
     const [wide, setWide] = useState<boolean>(true);
@@ -24,7 +38,12 @@ const GameConsole = observer(() => {
     const [transparent, setTransparent] = useState<boolean>(false);
     const transparentButtonRef = useRef<HTMLButtonElement>(null);
     const [store] = useRootStore();
-    const elements = toJS(store.elementsStore.array);
+    const elements = toJS(
+        store.consoleStore.deletingMode === "multiple"
+            ? Object.keys(store.consoleStore.deleteConfirmations)
+                .map(id => store.elementsStore.byId[id])
+            : store.elementsStore.array
+    );
     useEffect(()=>{
         setJustMounted(false);
     }, []);
@@ -105,7 +124,7 @@ const GameConsole = observer(() => {
                 </div>
                 <ElementsTable />
                 <div className="mx-5 my-4">
-                    <a href="#console-top" className="btn btn-primary btn-lg">To top</a>
+                    <ConsoleFooter />
                 </div>
             </ElementsTableContext.Provider>
         </div>

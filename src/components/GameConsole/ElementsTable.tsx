@@ -92,17 +92,26 @@ const DiscoveredNo = observer(({id}: {id:string})=>{
 
 const ParentCell = observer(({parentIds}: Pick<TElement, "parentIds">) => {
     if (!parentIds.length) return <div className="parent parent-empty"><i>Is root element</i></div>;
+    const c = useConsole();
+    if (c.deletingMode === "multiple") {
+        return <>
+            {parentIds.map((v,i) => <ParentCellItem key={i+','+v} id={v} skipLink={!c.deleteConfirmations[v]} />)}
+        </>
+    }
     return <>
         {parentIds.map((v,i) => <ParentCellItem key={i+','+v} id={v} />)}
     </>
 });
-const ParentCellItem = observer(({id}: {id:string}) => {
+const ParentCellItem = observer(({id, skipLink}: {id:string, skipLink?:boolean}) => {
     const [store] = useRootStore();
     const el = store.elementsStore.byId[id];
     const { discovered, mdIcon, title } = el;
+    const toLink = skipLink 
+        ? { className: "text-body no-target" } 
+        : { href: `#${id}-in-table`, className: "text-body have-target" };
     return <>
         <div className="parent parent-regular">
-            <a href={`#${id}-in-table`} className="text-body">
+            <a {...toLink}>
                 {
                     discovered 
                         ? <span className="parent-is-discovered material-symbols-outlined" title="Discovered">flag_2</span>
@@ -134,13 +143,34 @@ const ElementsThead = observer(({table}:{table:Table<TElement>}) => {
     </thead>
 });
 
-const ActionsDefault = observer(({id}: {id: string}) => {
+const ActionsDefaultEdit = observer(({id}: {id: string}) => {
     const c = useConsole();
     const t = useElementsTableContext();
+    if (!t.allows.update) return null;
+    if (c.deletingMode) {
+        return <span className="material-symbols-outlined action-disabled" title="Can't start edit while deleting is in air">ink_pen</span>;
+    }
+    return <span className="material-symbols-outlined" title="Edit..." onClick={()=>c.updateStart(id)}>ink_pen</span>;
+});
+const ActionsDefaultDelete = observer(({id}: {id: string}) => {
+    const c = useConsole();
+    const t = useElementsTableContext();
+    if (!t.allows.delete) return null;
+    if (c.haveUpdates) {
+        return <span className="material-symbols-outlined action-disabled action-quite-disabled" title="Delete disabled while edit form opened">delete</span>;
+    }
+    if (c.deletingMode === "single") {
+        if (!c.deleteConfirmations[id]) {
+            return <span className="material-symbols-outlined action-disabled" title="Another element is in deleting">delete</span>;
+        }
+    }
+    return <span className="material-symbols-outlined" title="Delete..." onClick={()=>c.deleteStart(id)}>delete</span>;
+});
+const ActionsDefault = observer(({id}: {id: string}) => {
     return <>
         <div className="actions-block actions-default">
-            { t.allows.update ? <span className="material-symbols-outlined" title="Edit..." onClick={()=>c.updateStart(id)}>ink_pen</span> : null }
-            { t.allows.delete ? <span className="material-symbols-outlined" title="Delete..." onClick={()=>c.deleteStart(id)}>delete</span> : null }
+            <ActionsDefaultEdit id={id} />
+            <ActionsDefaultDelete id={id} />
         </div>
     </>
 });
@@ -149,8 +179,18 @@ const ActionsDeleting = observer(({id}: {id: string}) => {
     const c = useConsole();
     return <>
         <div className="actions-block actions-deleting-confirmation">
-            <span className="material-symbols-outlined" title="Cancel" onClick={()=>c.deleteCancel(id)}>disabled_by_default</span>
-            <span className="do-delete material-symbols-outlined" title="Delete" onClick={()=>{c.delete(id)}}>check</span>
+            <span className="material-symbols-outlined" title="Cancel" onClick={()=>c.deleteCancel()}>disabled_by_default</span>
+            {
+                c.deletingMode === "multiple"
+                    ? <>
+                        <span 
+                            className="material-symbols-outlined action-disabled" 
+                            title="For delete many items, use the button below"
+                        >check</span>
+                    </>
+                    : <span className="do-delete material-symbols-outlined" title="Delete" onClick={()=>{c.delete()}}>check</span>
+            }
+            
         </div>
     </>
 });
