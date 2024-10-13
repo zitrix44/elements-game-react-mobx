@@ -2,7 +2,7 @@ import { ReactNode, useContext, useState } from 'react';
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { ToastContainer } from 'react-toastify';
-import {Md5} from 'ts-md5';
+import { Md5 } from 'ts-md5';
 import { RootStore, StoreContext } from '../Contexts';
 import LaunchStore from '../model/LaunchStore';
 import { TError } from '../model/ElementsStore.utils';

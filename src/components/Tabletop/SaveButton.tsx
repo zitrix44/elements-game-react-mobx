@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { Md5 } from 'ts-md5';
 import useRootStore from "../../Contexts";
 import { envString } from "../../utils";
 import { useState } from "react";
@@ -17,6 +18,8 @@ const SaveButton = observer(() => {
         return blob;
     };
     const makeFilename = (saveDiscovered: boolean) => {
+        const hash = Md5.hashStr(store.elementsStore.toCSV(false));
+        const rulesetHash = 'uid-' + hash.slice(0,4) + hash.slice(-3);
         const prefix = envString(saveDiscovered ? 'VITE_SAVEFILE_PREFIX' : 'VITE_RULESETFILE_PREFIX');
         const postfix = envString(saveDiscovered ? 'VITE_SAVEFILE_POSTFIX' : 'VITE_RULESETFILE_POSTFIX');
         const date = (new Date()).toISOString().replace(/:\d+\.\d+Z$/, '').replaceAll(':', '-').replace('T', '.');
@@ -24,7 +27,7 @@ const SaveButton = observer(() => {
         const undiscovered = store.elementsStore.undiscoveredElementsCount;
         const discovered = count - undiscovered;
         const progress = saveDiscovered ? `${discovered}-of-${count}` : `${count}-elements`;
-        return [prefix, progress, date, postfix].join('.');
+        return [prefix, rulesetHash, progress, date, postfix].join('.');
     }
     const makeLink = (blob: Blob, filename: string) => {
         const url = URL.createObjectURL(blob);

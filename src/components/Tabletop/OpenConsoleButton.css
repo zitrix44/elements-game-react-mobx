@@ -1,0 +1,44 @@
+.btn-console {
+    position: relative;
+    .btn-console-warning {
+        position: absolute;
+        top: 100%;
+        left: -40px;
+        margin-top: -10px;
+        opacity: 0;
+        z-index: var(--z-index-tooltip-on-hover);
+        pointer-events: none;
+        transition: opacity 0.2s linear, margin-top 0.2s ease-in;
+    }
+    &:hover, &:focus {
+        .btn-console-warning {
+            margin-top: 10px;
+            opacity: 1;
+        }
+    }
+    .btn-console-warning-content {
+        color: white;
+        padding: 1rem;
+        font-size: 1rem;
+        text-align: start;
+        width: fit-content;
+        background: var(--bs-danger);
+        white-space: nowrap;
+        border-radius: 5px;
+        box-shadow: inset 0px 0px 1px 1px #00000040, 0px 3px 10px -2px black;
+    }
+    .btn-console-warning-content::before {
+        content: "\0a0";
+        display: block;
+        width: 0.5rem;
+        height: 0.5rem;
+        position: absolute;
+        left: 68px;
+        top: -0.25rem;
+        rotate: 45deg;
+        background: inherit;
+        box-shadow: inset 1.5px 1.5px 0px -0.5px #00000040;
+        /* NOTE: из-за поворота меняется режим сглаживания, и однопиксельная тень сверху расплывается */
+        /* NOTE: подтянув spread на пол-пикселя, избавляемся от избыточного полуразмытия */
+    }
+}
