@@ -74,6 +74,10 @@
         }
         /* transform: skewX(-15deg); */
     }
+    .btn-playstate:not(:has(.material-symbols-outlined)) {
+        padding-top: 8px;
+        padding-bottom: 4px;
+    }
     .btn-mystical {
         --bs-btn-color: #ffffff;
         --bs-btn-bg: #dd0df0;
@@ -89,5 +93,12 @@
         --bs-btn-disabled-color: #000;
         --bs-btn-disabled-bg: #0dcaf0;
         --bs-btn-disabled-border-color: #0dcaf0; */
+    }
+}
+@media screen and (min-width: 1400px) {
+    .page-game {
+        .cauldron {
+            margin-bottom: -300px;
+        }
     }
 }

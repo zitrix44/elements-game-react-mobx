@@ -76,12 +76,24 @@ card-shape-pentagon-border
 card-shape-comix-clip
 card-shape-comix-border
 */
+.ecard-shape-basic {
+    --ecard-clip-fill: url(#card-shape-basic-clip);
+    --ecard-clip-border: url(#card-shape-basic-border);
+}
+.ecard-shape-pentagon {
+    --ecard-clip-fill: url(#card-shape-pentagon-clip);
+    --ecard-clip-border: url(#card-shape-pentagon-border);
+}
+.ecard-shape-comix {
+    --ecard-clip-fill: url(#card-shape-comix-clip);
+    --ecard-clip-border: url(#card-shape-comix-border);
+}
 .ecard-clip-fill {
-    clip-path: url(#card-shape-comix-clip);
+    clip-path: var(--ecard-clip-fill);
 }
 .ecard-clip-stroke {
     background: var(--ecard-stroke);
-    clip-path: url(#card-shape-comix-border);
+    clip-path: var(--ecard-clip-border);
 }
 .ecard-content {
     position: relative;

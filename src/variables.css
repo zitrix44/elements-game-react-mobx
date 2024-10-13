@@ -24,10 +24,10 @@ html {
     --ecard-unclipped-title-color: var(--ecard-title-color);
     --ecard-unclipped-icon-color: var(--ecard-icon-color);
     --ecard-unclipped-opacity: 0.75;
+    --ecard-clip-fill: url(#card-shape-basic-clip);
+    --ecard-clip-border: url(#card-shape-basic-border);
     --ecard-background: rgba(208, 174, 108, 0.7);
     --ecard-background-gradient: linear-gradient(23deg, rgba(2,0,36,0) 0%, rgba(255,255,255,1) 100%);
-    --ecard-stroke: rgb(255, 100, 50);
-    --ecard-stroke: hsl(14.63deg 100% 59.8%);
     --ecard-stroke: hwb(14.63deg 19.6% 0%);
     --ecard-icon-size-regular: 60px;
     --ecard-icon-size-larger: 70px;

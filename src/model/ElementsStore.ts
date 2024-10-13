@@ -74,12 +74,6 @@ export default class ElementsStore {
         if (!options.skipReorder) {
             this.#reorder();
         }
-        // console.log('air', this.getDescendantOrSelf('air').map(v=>v.id))
-        // console.log('fire', this.getDescendantOrSelf('fire').map(v=>v.id))
-        // console.log('globe', this.getDescendantOrSelf('globe').map(v=>v.id))
-        // console.log('sail', this.getDescendantOrSelf('sail').map(v=>v.id))
-        // console.log('kayaking', this.getDescendantOrSelf('kayaking').map(v=>v.id))
-        // console.log('fire_truck', this.getDescendantOrSelf('fire_truck').map(v=>v.id))
         return elements;
     }
 
@@ -152,5 +146,38 @@ export default class ElementsStore {
         const element = this.byId[id];
         element.title = data.title || element.title;
         element.mdIcon = data.mdIcon || element.mdIcon;
+    }
+
+    toCSV(saveDiscovered = true): string {
+        const rowSep = '\n';
+        const sep = '\t';
+        const innerSep = ' ';
+        const quote = '"';
+        const saveTheQuotes = (str: string): string => {
+            if (!str.includes(quote) && !str.includes(sep) && !str.includes(rowSep)) return str;
+            if (str.includes(quote)) {
+                str = str.replaceAll(/[^\\]"/, `\\"`);
+            }
+            return quote + str + quote;
+        }
+        const thead = ['id', 'title', 'parentIds', 'mdIcon', 'discovered'].join(sep);
+        const meta = [
+            `# ${saveDiscovered ? 'Savefile' : 'Ruleset'} for TODO: game's URL`,
+            `# Created at ${saveTheQuotes(new Date()+'')} (${Date.now()})`
+        ];
+        const tbody = this.array.map(el => {
+            return[
+                el.id,
+                saveTheQuotes(el.title),
+                el.parentIds.join(innerSep),
+                saveTheQuotes(el.mdIcon),
+                saveDiscovered && el.discovered || 0,
+            ].join(sep);
+        });
+        return [
+            thead,
+            ...meta,
+            ...tbody
+        ].join(rowSep);
     }
 }

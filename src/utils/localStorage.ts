@@ -9,6 +9,9 @@ let lsGet = (key: string): string | null => {
 let lsSet = (key: string, value: string | number): void => {
     localStorage.setItem(CONST.LS_PREFIX + key, '' + value);
 }
+let lsHas = (key: string): boolean => {
+    return (CONST.LS_PREFIX + key) in localStorage;
+};
 
 if (lsFake) {
     console.warn('No localStoage found');
@@ -20,9 +23,12 @@ if (lsFake) {
         }
         toastUsed = true;
     };
+    lsHas = (_key: string): boolean => {
+        return false;
+    };
 }
 
-export { lsGet, lsSet };
+export { lsGet, lsSet, lsHas };
 
 export const lsNumber = (key: string): number => {
     return parseFloat(lsGet(key) || '') || 0;

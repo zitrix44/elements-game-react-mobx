@@ -4,7 +4,8 @@ import Launcher from './components/Launcher';
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import PageGame from './pages/PageGame';
-import CardShapesDefine from './components/CardShape/CardShapesDefine';
+import CardShapesDefine from './components/ThemeSettings/CardShapesDefine';
+import ColorSchemesDefine from './components/ThemeSettings/ColorSchemesDefine';
 
 
 const App = observer(() => {
@@ -13,6 +14,7 @@ const App = observer(() => {
     <>
       <div>
         <CardShapesDefine />
+        <ColorSchemesDefine />
       </div>
       { rootStore.launchStore.active ? <Launcher key="Launcher" /> : <PageGame key="PageGame" /> }
     </>

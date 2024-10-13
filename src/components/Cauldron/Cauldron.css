@@ -9,7 +9,7 @@
   & {
     /* will change in DiscoveredOverlay.discovered-overlay-opened.css */
     transition: left 2s ease-in, opacity 2s ease-in;
-    left: 200px;
+    left: 100px;
   }
   .cauldron-bg {
     position: absolute;

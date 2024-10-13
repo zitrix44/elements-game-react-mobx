@@ -17,15 +17,15 @@
         width: 105vw;
     }
     .bg2 {
-        left: 5vw;
-        top: 10vh;
-        width: 95vw;
-        height: 90vh;
+        left: -5vw;
+        top: -5vh;
+        width: 115vw;
+        height: 105vh;
     }
     .bg3 {
         top: -14vh;
-        left: 10vw;
-        width: 90vw;
+        left: -10vw;
+        width: 110vw;
         height: 114vh;
     }
     .material-symbols-outlined {

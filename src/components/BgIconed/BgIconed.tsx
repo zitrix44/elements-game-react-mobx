@@ -232,6 +232,7 @@ export const BgIconed = observer((
         iStepMultipty = 1,
         xCount = 5,
         yCount = 5,
+        opacity = 1,
     }: {
         randomSeed: number
         className?: string,
@@ -240,6 +241,7 @@ export const BgIconed = observer((
         iStepMultipty?: number,
         xCount?: number,
         yCount?: number,
+        opacity?: number,
     }
 ) => {
     const icons: TbgIcon[] = [];
@@ -261,8 +263,9 @@ export const BgIconed = observer((
             });
         }
     }
+    if (opacity == 0) return null;
     return <>
-        <div className={`bg-iconed-grid ${className}`}>
+        <div className={`bg-iconed-grid ${className}`} style={{opacity}}>
             {
                 icons.map(({i, i_3, i_7, i_10, id, x, y, mdIcon}: TbgIcon) => {
                     return <span key={id} className={`bg-iconed-icon bg-iconed_${i} bg-iconed-i3_${i_3} bg-iconed-i7_${i_7} bg-iconed-i10_${i_10} bg-iconed-x_${x} bg-iconed-y_${y}`}>

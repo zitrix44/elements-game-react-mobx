@@ -13,3 +13,27 @@ html {
         resize: revert;
     }
 }
+
+.autodownloader {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: block;
+    padding: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    background: white;
+    color: black;
+    animation: autodownloader-fadein 1s linear 0s 1 forwards;
+}
+
+@keyframes autodownloader-fadein {
+    0% {
+        opacity: 0;
+    }
+    90% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

@@ -55,7 +55,7 @@ const BasicShapeClip = observer((props: TfigureProps) => {
         <svg {...toSvg}>
             <defs>
                 <clipPath id={props.id} clipPathUnits="objectBoundingBox">
-                    <path d="M0.10,0.0 L0.90,0.0 L1,0.1 L1,0.9 L0.9,1 L0.1,1 L0,0.9 L0,0.1 Z" />
+                    <path d="M0.15,0.01 L0.85,0.01 L0.99,0.15 L0.99,0.85 L0.85,0.99 L0.15,0.99 L0,0.85 L0,0.15 Z" />
                 </clipPath>
             </defs>
         </svg>

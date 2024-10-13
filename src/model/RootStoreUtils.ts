@@ -67,7 +67,7 @@ export default class RootStoreUtils {
         return ret;
     }
     #copyText(text: string | null, opt: TcopyTextOptions): true | string {
-        let txt = text === 'string' ? text : this.#copyTextExtract(opt);
+        let txt = typeof text === 'string' ? text : this.#copyTextExtract(opt);
         txt = this.#copyTextFormat(txt, opt);
         if (!txt.length) {
             throw new Error(`Can't copy empty string`);
