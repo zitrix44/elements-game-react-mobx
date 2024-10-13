@@ -24,6 +24,7 @@
       height: 38px;
       background: transparent url(/cauldron-wave.png) left top no-repeat;
       animation: cauldron-wave 9s ease-in-out 0s infinite;
+      pointer-events: none;
     }
     &.cauldron-wave-0 {
       left: 190px;
@@ -76,7 +77,7 @@
         animation: cauldron-icon-container 10s ease-in-out infinite;
 /* FIXME: size for emoji, e.g. if .mdIcon === "⌚", or 🎪, or Щ */
         min-width: var(--incauldron-icon-size);
-        height: calc(var(--incauldron-icon-size) * 1.5);
+        height: calc(var(--incauldron-icon-size) * 1.25);
         margin-top: 0px;
         box-sizing: content-box;
         border-bottom: 0px solid transparent;

@@ -13,12 +13,14 @@ import DiscoveredOverlay from "../components/DiscoveredOverlay/DiscoveredOverlay
 import './PageGame.css';
 import { useEffect, useState } from "react";
 import GameConsole from "../components/GameConsole/GameConsole";
+import OpenConsoleButton from "../components/Tabletop/OpenConsoleButton";
+
 
 const PageGame = observer(() => {
-    const [isMounted, setIsMounted] = useState<boolean>(false);
+    const [justMounted, setJustMounted] = useState<boolean>(true);
     const [store] = useRootStore();
     useEffect(()=>{
-        setIsMounted(true);
+        setJustMounted(false);
     },[]);
     const elements = store.elementsStore.array;
     const onCardClick: TCardOnClick = (id) => {
@@ -32,8 +34,16 @@ const PageGame = observer(() => {
         <div className="page-game">
             <GameBG />
             <h1>PageGame 🎢 ({store.cauldronStore.containsRecipeFor.join(', ')})</h1>
-            <Cauldron />
-            <div className={`ecards ${isMounted ? 'ecards-mounted': 'not-ecards-mounted'}`}>
+            
+            <div className="row px-0 w-100">
+                <div className="col-12 col-xl-8 col-xxl-7">
+                    <Cauldron />
+                </div>
+                <div className="col-xl-4 col-xxl-5">
+                    <OpenConsoleButton />
+                </div>
+            </div>
+            <div className={`ecards`}>
                 <div className="d-flex flex-wrap">
                     {elements.map(v => {
                         if (!v.discovered) return null;
@@ -42,7 +52,7 @@ const PageGame = observer(() => {
                             key={v.id} 
                             element={toJS(v)} 
                             onClick={onCardClick} 
-                            drawHelloAnimation={isMounted} 
+                            drawHelloAnimation={!justMounted} 
                         />;
                     })}
                 </div>

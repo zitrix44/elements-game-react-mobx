@@ -14,7 +14,7 @@ export default class ConsoleStore {
     deletingMode: TdeletingMode = false;
     deleteConfirmations: Record<string, true> = {};
     
-    active = true;
+    active = false;
     haveUpdates = false;
     discoveredByConsole = 0;
     discoverStrategy: TdiscoverStrategy = "simple";
